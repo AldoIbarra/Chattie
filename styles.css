@@ -1,118 +1,137 @@
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
-    background: url(Bac.png);
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+body{
+    background-color: black;
+}
+body .row .background-chattie{
     height: 100%;
 }
-* {
-    box-sizing: border-box;
-}
-.contenedor{
-    width: 100%;
-    padding: 15px;
-}
-.formulario{
-    background: #00ADB5;
-    margin-top: 150px;
-    padding: 3px;
-    height: 50%;
-}
-h1{ 
-    text-align: center;
-    color: #1a2537;
-    font-size: 40px;
-}
-input[type="Email"],
-input[type="Nombre"],
-input[type="text"],
-input[type="date"],
-input[type="password"]{
-    background-color: #393D46;
-    font-size: 20px;
-    width: 82%;
-    padding: 10px;
-    border: none;
-}
-.input-contenedor .form-floating:focus-within {
-    z-index: 5;
-  }
-.input-contenedor{
-    background-color: #393D46;
-    margin-bottom: 15px;
-    border: 5px solid #000000;
-}
-.icon{
-    background-color: #393D46;
-    min-width: 50px;
-    text-align: center;
-    color: #999;
-}
-.button{
-    border: none;
-    width: 100%;
-    color: white;
-    font-size: 20px;
-    background:  #1a2537;
-    padding: 15px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-.button:hover{
-    background: cadetblue;
-}
-p{
-    text-align: center;
-}
-.link{
-    text-decoration: none;
-      color: #1a2537;
-    font-weight: 600;
-}
-.link:hover{
-     color: cadetblue;
-}
-@media(min-width:768px)
-{
-    .formulario{
-        margin: auto;
-        width: 500px;
-        margin-top: 150px;
-        border-radius: 2%;
-    }
-}
 
-.bebas-neue-regular {
+.bebas {
     font-family: "Bebas Neue", sans-serif;
     font-weight: 400;
     font-style: normal;
-  }  
+} 
 
+.inter {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+}
 
+.background-chattie {
+    background-image: url("back-logo.svg");
+    background-repeat: repeat;
+    height: 100%;
+}
+.h-text{
+    font-size: 22vh;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+}
 
+.white-text{
+    color: white;
+}
 
+.background-chattie img{
+    max-width: 327px;
+    margin-bottom: 15px;
+    margin-left: 10px;
+}
 
+.background-form{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+    to top,
+    #222831 0%,
+    #222831 60%,
+    #393E46 60%,
+    #393E46 100%
+  );
+}
 
+.sign-up-form form{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    margin: 10px 50px 10px 50px;
+}
 
+form h1{
+    font-size: 75px;
+    margin-bottom: 20px;
+}
 
+form input{
+    margin-bottom: 30px;
+    min-width: 300px;
+    color: white;
+}
 
+.sign-up-form button{
+    margin-top: 10px;
+    background-color: #222831;
+    border-radius: 38px;
+    font-size: 25px;
+    border: none;
+    padding: 5px 10px 5px 10px;
+}
 
+form span{
+    margin-top: 35px;
+}
 
+form span a{
+    color: #222831;
+}
 
+form input::placeholder {
+    color: white;
+    opacity: 0.5;
+}
 
+.sign-up-form form input{
+    background-color: #393E46;
+    border: none;
+    border-bottom: 10px solid #222831;
+}
 
+.sign-up-form form input:focus{
+    outline: 0;
+}
 
+.sign-in-form form{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    padding: 40px 0px 40px 0px;
+}
 
+.sign-in-form{
+    margin: 50px 0px 50px 0px;
+}
 
+.sign-in-form form input{
+    background-color: #393E46;
+    border: none;
+    border-bottom: 10px solid #222831;
+}
 
+.big-font{
+    font-size: 54px;
+}
 
+.sign-in-form img{
+    min-width: 120px;
+}
 
-
-
-
-
-
-
-
+.sign-in-form button{
+    margin-top: 10px;
+    background-color: #222831;
+    border-radius: 38px;
+    font-size: 25px;
+    border: none;
+    padding: 5px 20px 5px 20px;
+}

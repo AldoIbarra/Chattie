@@ -1,0 +1,122 @@
+*{
+    color: white;
+}
+
+.header-chat{
+    background-color: #393E46;
+}
+
+.container-chats .chat-list{
+    background-color: #222831;
+    padding-top: 15px;
+}
+
+.messages{
+    background-image: url("Back-Chat.svg");
+    background-repeat: repeat;
+}
+
+.container-chats .chat-list div{
+    background-color: #393E46;
+}
+
+.container-chats .chat-list div:hover{
+    background-color: #5E636A;
+}
+
+.header-chat div{
+    padding: 7px;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+}
+
+.header-chat div div:first-child{
+    display: flex;
+    flex-basis: auto;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+    min-width: 0;
+}
+
+.header-chat div div:nth-child(2) img{
+    max-width: 40px;
+    margin-left: 15px;
+}
+
+.container-chats .chat-list .chat{
+    height: 62px;
+    display: flex;
+    flex-basis: auto;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+    cursor: pointer;
+    margin-bottom: 15px;
+    padding-left: 15px;
+}
+
+.container-chats{
+    height: 88vh;
+}
+
+.messages .footer-container footer{
+    position: absolute;
+    bottom: 1vh;
+    max-width: 55%;
+}
+
+.messages footer{
+    background-color: black;
+}
+
+.messages footer img{
+    max-width: 35px;
+}
+
+.messages footer input{
+    background-color: #393E46;
+    border: none;
+    border-bottom: 10px solid #222831;
+    width: 100%;
+}
+
+.messages footer input:focus{
+    outline: 0;
+}
+
+.messages footer div div div{
+    padding: 5px;
+}
+
+.messages .chat-messages{
+    position: relative;
+    z-index: 1;
+}
+
+.messages .chat-messages .YourMessage{
+    background-color: #393E46;
+    display: flex;
+    flex-direction: column;
+    max-width: fit-content;
+    margin: 10px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.messages .chat-messages .MyMessage{
+    background-color: #00ADB5;
+    display: flex;
+    flex-direction: column;
+    max-width: fit-content;
+    margin: 10px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.messages .chat-messages .YourMessage span:nth-child(2),
+.messages .chat-messages .MyMessage span:nth-child(2){
+    text-align: end;
+    font-size: 12px;
+}
