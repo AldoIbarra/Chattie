@@ -92,7 +92,9 @@
 
 .messages .chat-messages{
     position: relative;
-    z-index: 1;
+    max-height: 78vh;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .messages .chat-messages .YourMessage{
