@@ -63,19 +63,17 @@
             messageHTML += `<p>${message.msg}</p>`;
         });
 
-        // Insertar mensajes en el modal
+  
         modalMessage.innerHTML = messageHTML;
 
         // Mostrar modal
         modal.style.display = "block";
 
-        // Cerrar modal al hacer clic en la "x"
         const closeBtn = document.querySelector("#myModal .close");
         closeBtn.onclick = function() {
             modal.style.display = "none";
         }
 
-        // Cerrar modal al hacer clic fuera del modal
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
