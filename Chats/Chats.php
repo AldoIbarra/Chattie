@@ -1,27 +1,30 @@
 <?php
 /*
 Por ahora solo muestra el nombre del usuario
+los chats del usuario
+y los mensajes de cada chat
 */
-
 
 // Comprueba el estado de la sesión
 $sessionStatus = session_status();
 session_start();
 
-    if(!isset($_SESSION["AUTH"])) {
-        //Si la sesion de usuario no existe redirigir a login
-        header("Location: signIn.php");
-        exit;
-    }
-    require_once "../php/models/User.php";
-    require_once "../php/db.php";
+if (!isset($_SESSION['AUTH'])) {
+    // Si la sesion de usuario no existe redirigir a login
+    header('Location: signIn.php');
+    exit;
+}
+require_once '../php/models/User.php';
+require_once '../php/models/Chats.php';
+require_once '../php/db.php';
 
-    $idUser = $_SESSION["AUTH"];
-    $mysqli = db::connect();
+$idUser = $_SESSION['AUTH'];
+$mysqli = db::connect();
 
-    $user = User::findUserById($mysqli,(int)$idUser);
+$user = User::findUserById($mysqli, (int) $idUser);
+$chats = Chat::mostrarChats($mysqli, $idUser);
 
-    ?>
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -40,7 +43,7 @@ session_start();
         <div class="row header-chat">
             <div class="col-4">
               <div>
-                <span><?= $user->getUsername() ?></span>
+                <span><?php echo $user->getUsername(); ?></span>
                 <span>En línea</span>
               </div>
               <div>
@@ -61,21 +64,27 @@ session_start();
         </div>
         <div class="row container-chats">
             <div class="col-4 chat-list">
-              <div class="chat">Usuario 1</div>
+              <!-- <div class="chat">Usuario 1</div>
               <div class="chat">Usuario 2</div>
               <div class="chat">Grupo 1</div>
-              <div class="chat">Usuario 3</div>
+              <div class="chat">Usuario 3</div> -->
+              <?php // se muestran los chats
+          foreach ($chats as $chat) {
+              echo '<div class="chat" id="chat'.$chat->getID().'" data-index="'.$chat->getID().'">'.$chat->getName().'</div>';
+          }
+?>
             </div>
             <div class="col-8 messages">
               <div class="chat-messages">
-                <div class="YourMessage">
+                <!-- <div class="YourMessage">
                   <span>Hola, ¿qué tal?</span>
                   <span>19:00</span>
                 </div>
                 <div class="MyMessage">
                   <span>Bien, ¿y tú?</span>
                   <span>19:05</span>
-                </div>
+                </div> -->
+                
               </div>
               <div class="footer-container">
                 <footer class="container">
@@ -99,6 +108,51 @@ session_start();
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+document.querySelectorAll('.chat').forEach(function(element) {
+    element.addEventListener('click', function() {
+        var chatId = this.getAttribute('data-index');
+
+        $.ajax({
+            type: "POST",
+            url: "../php/controllers/showMessages.php",
+            data: { Id: chatId },
+            success: function(response) {
+                try {
+                    var infoChat = response;
+                    $('.chat-messages').empty();
+                    if (infoChat.messages.length > 0) {
+                      console.log("<?php echo $idUser; ?>");
+                    infoChat.messages.forEach(function(row) {
+                      console.log(row.UserId);
+                        var messageClass = (row.UserId === '<?php echo $user->getUserName(); ?>') ? "MyMessage" : "YourMessage";
+                        var messageHTML = '<div class="' + messageClass + '">';
+                        messageHTML += '<span>' + row.Message + '</span>';
+                        messageHTML += '<span>' + row.CreationDate + '</span>';
+                        messageHTML += '</div>';
+                        
+                        $('.chat-messages').append(messageHTML);
+                    });
+                  }
+                  else{
+                    var noMessages = '<span>No hay mensajes disponibles</span>';
+                    $('.chat-messages').append(noMessages);
+                  }
+                } catch (error) {
+                    console.error("Error al analizar JSON:", error);
+                }
+            },
+            error: function() {
+                console.log("Error al obtener mensajes.");
+            },
+        });
+    });
+});
+</script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
   </body>
 </html>
