@@ -48,7 +48,7 @@ require 'php/db.php';
                         <input placeholder="Contraseña" type="text" id="Password">
                         <input placeholder="Fecha de nacimiento" id="DateBirth" class="textbox-n" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="date" />
                         <button class="inter white-text">Registrate</button>
-                        <span class="inter">¿Ya tienes cuenta?, <a href="">¡Ingresa!</a></span>
+                        <span class="inter">¿Ya tienes cuenta?, <a href="signIn.php">¡Ingresa!</a></span>
                     </form>
                     <script src="js/signup.js"></script>
                 </div>
