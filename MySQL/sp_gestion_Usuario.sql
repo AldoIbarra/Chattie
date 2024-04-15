@@ -5,7 +5,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_gestion_Usuario`(
     IN p_Email						VARCHAR(30),
     IN p_Password					VARCHAR(20),
     IN p_DateBirth					DATE
-)
+) --
 BEGIN
 
 IF opc = 'signIn' THEN 
