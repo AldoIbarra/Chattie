@@ -41,7 +41,7 @@
                         <input placeholder="Correo electronico" type="text" id="Email">
                         <input placeholder="Contraseña" type="text" id="Password">
                         <button class="inter white-text">Ingresar</button>
-                        <span class="inter">¿Aún no tienes cuenta?, <a href="">¡Registrate!</a></span>
+                        <span class="inter">¿Aún no tienes cuenta?, <a href="SignUp.php">¡Registrate!</a></span>
                     </form>
                     <script src="js/signIn.js"></script>
                 </div>
