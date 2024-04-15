@@ -40,7 +40,7 @@
                     // Sucess ...
                     showModal([{ msg: res.msg }]);
           
-                    window.location.replace("Chats/Chats.html");
+                    window.location.replace("Chats/Chats.php");
                 }
             } catch(error) {
                 // Se imprime el error del servidor
