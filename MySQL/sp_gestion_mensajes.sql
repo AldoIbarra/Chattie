@@ -8,6 +8,23 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_gestion_mensajes`(
 )
 BEGIN
 
+IF opc = 'insertar' THEN -- insertar mensajes
+INSERT INTO Messages(
+ChatId,
+UserId,
+Message,
+CreationDate,
+Status
+)VALUES(
+p_ChatId,
+p_UserId,
+p_Message,
+now(),
+1
+);
+
+END IF;
+
 IF opc = 'mostrar' THEN -- mostrar mensajes de un chat
 
 -- Traer los mensajes de un chat
