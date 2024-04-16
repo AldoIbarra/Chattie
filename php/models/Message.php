@@ -3,7 +3,7 @@
 class Message
 {
     private $ID;
-    private $MessageId;
+    private $ChatId;
     private $UserId;
     private $Message;
     private $CreationDate;
@@ -18,14 +18,14 @@ class Message
         $this->ID = $ID;
     }
 
-    public function getMessageId()
+    public function getChatId()
     {
-        return $this->MessageId;
+        return $this->ChatId;
     }
 
-    public function setMessageId($MessageId)
+    public function setChatId($ChatId)
     {
-        $this->MessageId = $MessageId;
+        $this->ChatId = $ChatId;
     }
 
     public function getUserId()
@@ -58,9 +58,9 @@ class Message
         $this->CreationDate = $CreationDate;
     }
 
-    public function __construct($MessageId, $UserId, $Message, $CreationDate)
+    public function __construct($ChatId, $UserId, $Message, $CreationDate)
     {
-        $this->MessageId = $MessageId;
+        $this->ChatId = $ChatId;
         $this->UserId = $UserId;
         $this->Message = $Message;
         $this->CreationDate = $CreationDate;
@@ -69,7 +69,7 @@ class Message
     public static function parseJson($json)
     {
         $Message = new Message(
-            isset($json['MessageId']) ? $json['MessageId'] : '',
+            isset($json['ChatId']) ? $json['ChatId'] : '',
             isset($json['UserId']) ? $json['UserId'] : '',
             isset($json['Message']) ? $json['Message'] : '',
             isset($json['CreationDate']) ? $json['CreationDate'] : '',
@@ -81,13 +81,12 @@ class Message
         return $Message;
     }
 
-    public function save($mysqli)
+    public function save($mysqli, $ChatId, $UserId ,$Message)
     {
         $opcion = 'insertar';
-        $ID = 0;
-        $sql = 'CALL sp_gestion_Usuario(?,?,?,?,?,?)';
+        $sql = 'CALL sp_gestion_mensajes(?,?,?,?,?,?)';
         $stmt = $mysqli->prepare($sql);
-        $stmt->execute([$opcion, $ID, $this->MessageId, $this->UserId, $this->Message, $this->DateBirth]);
+        $stmt->execute([$opcion, 0, $ChatId, $UserId, $Message, ""]);
         $this->ID = (int) $stmt->insert_id;
     }
 

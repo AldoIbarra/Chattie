@@ -2,7 +2,8 @@
 /*
 Por ahora solo muestra el nombre del usuario
 los chats del usuario
-y los mensajes de cada chat
+los mensajes de cada chat
+se envian y reciben mensajes
 */
 
 // Comprueba el estado de la sesión
@@ -11,7 +12,7 @@ session_start();
 
 if (!isset($_SESSION['AUTH'])) {
     // Si la sesion de usuario no existe redirigir a login
-    header('Location: signIn.php');
+    header('Location: ../signIn.php');
     exit;
 }
 require_once '../php/models/User.php';
@@ -80,15 +81,16 @@ $chats = Chat::mostrarChats($mysqli, $idUser);
 ?>
 			</div>
 			<div class="col-8 messages">
-				<div class="chat-messages">
+				<div class="chat-messages" id="chat-messages">
 					<!-- <div class="YourMessage">
-                  <span>Hola, ¿qué tal?</span>
-                  <span>19:00</span>
-                </div>
-                <div class="MyMessage">
-                  <span>Bien, ¿y tú?</span>
-                  <span>19:05</span>
-                </div> -->
+						<span>Pedro</span>
+						<span>Hola, ¿qué tal?</span>
+						<span>19:00</span>
+					</div>
+					<div class="MyMessage">
+						<span>Bien, ¿y tú?</span>
+						<span>19:05</span>
+					</div> -->
 
 				</div>
 				<div class="footer-container">
@@ -100,10 +102,10 @@ $chats = Chat::mostrarChats($mysqli, $idUser);
 										<a href=""><img src="Export.svg" alt=""></a>
 									</div>
 									<div class="col-10">
-										<input type="text">
+										<input type="text" id="messageText">
 									</div>
 									<div class="col-1">
-										<a href=""><img src="Send.svg" alt=""></a>
+										<a href="" id="sendMessage"><img src="Send.svg" alt=""></a>
 									</div>
 								</div>
 							</div>
@@ -116,10 +118,12 @@ $chats = Chat::mostrarChats($mysqli, $idUser);
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 	<script>
+		var chatId = "0";
+		// Seleccionar chat
 		document.querySelectorAll('.chat').forEach(function(element) {
 			element.addEventListener('click', function() {
-				var chatId = this.getAttribute('data-index');
-				console.log(this.getAttribute('data-estado'));
+				chatId = this.getAttribute('data-index');
+
 				document.getElementById("chat_selected").textContent = this.textContent.trim();
 				if (this.getAttribute('data-estado') === '0') {
 					document.getElementById("user_status").textContent = "No disponible";
@@ -127,17 +131,16 @@ $chats = Chat::mostrarChats($mysqli, $idUser);
 					document.getElementById("user_status").textContent = "";
 				}
 
-
 				$.ajax({
 					type: "POST",
 					url: "../php/controllers/showMessages.php",
 					data: {
 						Id: chatId
 					},
-					success: function(response) {
+					success: function(data) {
 						try {
-							var infoChat = response;
-							$('.chat-messages').empty();
+							var infoChat = data;
+							$('#chat-messages').empty();
 							if (infoChat.messages.length > 0) {
 
 								infoChat.messages.forEach(function(row) {
@@ -146,12 +149,18 @@ $chats = Chat::mostrarChats($mysqli, $idUser);
 									) ? "MyMessage" : "YourMessage";
 									var messageHTML = '<div class="' + messageClass +
 										'">';
+									if (messageClass === "YourMessage") {
+										messageHTML += '<span>' + row.UserId + '</span>';
+									}
 									messageHTML += '<span>' + row.Message + '</span>';
 									messageHTML += '<span>' + row.CreationDate +
 										'</span>';
 									messageHTML += '</div>';
 
-									$('.chat-messages').append(messageHTML);
+									$('#chat-messages').append(messageHTML);
+									$('.chat-messages').scrollTop($('.chat-messages')[0]
+										.scrollHeight);
+
 								});
 							} else {
 								var noMessages = '<span>No hay mensajes disponibles</span>';
@@ -167,7 +176,88 @@ $chats = Chat::mostrarChats($mysqli, $idUser);
 				});
 			});
 		});
+
+		// Mandar mensaje
+		var sendMessage = document.getElementById("sendMessage");
+		sendMessage.addEventListener("click", function(event) {
+			event.preventDefault();
+			if ($("#messageText").val() != "") {
+
+				$.ajax({
+					url: "../php/controllers/insertMessage.php",
+					method: "POST",
+					data: {
+						fromUser: <?php echo $idUser; ?> ,
+						fromChat: chatId,
+						message: $("#messageText").val()
+					},
+					dateType: "text",
+					success: function(data) {
+						$("#messageText").val("");
+
+						$('#chat-messages').animate({
+							scrollTop: $('#chat-messages').prop("scrollHeight")
+						}, "slow");
+					}
+				})
+			}
+		})
+
+
+		$(document).ready(function() {
+
+
+			//Recargar mensajes
+			setInterval(function() {
+				if (chatId != "0")
+					$.ajax({
+						type: "POST",
+						url: "../php/controllers/showMessages.php",
+						data: {
+							Id: chatId
+						},
+						success: function(data) {
+							try {
+								var infoChat = data;
+								$('.chat-messages').empty();
+								if (infoChat.messages.length > 0) {
+
+									infoChat.messages.forEach(function(row) {
+
+										var messageClass = (row.UserId ===
+											'<?php echo $user->getUserName(); ?>'
+										) ? "MyMessage" : "YourMessage";
+										var messageHTML = '<div class="' + messageClass +
+											'">';
+										if (messageClass === "YourMessage") {
+											messageHTML += '<span>' + row.UserId + '</span>';
+										}
+										messageHTML += '<span>' + row.Message + '</span>';
+										messageHTML += '<span>' + row.CreationDate +
+											'</span>';
+										messageHTML += '</div>';
+
+										$('#chat-messages').append(messageHTML);
+
+									});
+								} else {
+									var noMessages = '<span>No hay mensajes disponibles</span>';
+									$('.chat-messages').append(noMessages);
+								}
+							} catch (error) {
+								console.error("Error al analizar JSON:", error);
+							}
+						},
+						error: function() {
+							console.log("Error al obtener mensajes.");
+						},
+					});
+			}, 700);
+
+		})
 	</script>
+
+
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
