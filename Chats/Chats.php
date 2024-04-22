@@ -24,6 +24,7 @@ $mysqli = db::connect();
 
 $user = User::findUserById($mysqli, (int) $idUser);
 $chats = Chat::mostrarChats($mysqli, $idUser);
+$contacts = User::getUserContacts($mysqli, $idUser);
 
 ?>
 <!DOCTYPE html>
@@ -54,7 +55,7 @@ $chats = Chat::mostrarChats($mysqli, $idUser);
 				</div>
 				<div>
 					<a href=""><img src="AddIcon.svg" alt=""></a>
-					<a href=""><img src="MessageIcon.svg" alt=""></a>
+					<button onclick="showContacts()"><img src="MessageIcon.svg" alt=""></button>
 					<a href=""><img src="UserIcon.svg" alt=""></a>
 				</div>
 			</div>
@@ -70,27 +71,19 @@ $chats = Chat::mostrarChats($mysqli, $idUser);
 		</div>
 		<div class="row container-chats">
 			<div class="col-4 chat-list">
-				<!-- <div class="chat">Usuario 1</div>
-              <div class="chat">Usuario 2</div>
-              <div class="chat">Grupo 1</div>
-              <div class="chat">Usuario 3</div> -->
 				<?php // se muestran los chats
-          foreach ($chats as $chat) {
-              echo '<div class="chat" id="chat'.$chat->getID().'" data-index="'.$chat->getID().'" data-estado="'.$chat->getIsGroup().'">'.$chat->getName().'</div>';
-          }
-?>
+				if(count($chats) < 1){
+					echo '<span style="display: flex; justify-content: center;">Aún no existen chats</span>';
+				}else{
+					foreach ($chats as $chat) {
+						echo '<div class="chat" id="chat'.$chat->getID().'" data-index="'.$chat->getID().'" data-estado="'.$chat->getIsGroup().'">'.$chat->getName().'</div>';
+					}
+				}
+          
+				?>
 			</div>
 			<div class="col-8 messages">
 				<div class="chat-messages" id="chat-messages">
-					<!-- <div class="YourMessage">
-						<span>Pedro</span>
-						<span>Hola, ¿qué tal?</span>
-						<span>19:00</span>
-					</div>
-					<div class="MyMessage">
-						<span>Bien, ¿y tú?</span>
-						<span>19:05</span>
-					</div> -->
 
 				</div>
 				<div class="footer-container">
@@ -115,6 +108,39 @@ $chats = Chat::mostrarChats($mysqli, $idUser);
 			</div>
 		</div>
 	</div>
+
+	<div class="modal" id="ContactsModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Inicia una conversación</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="Contacts">
+					<?php // se muestran los contactos
+						if(count($contacts) < 1){
+							echo '<span style="display: flex; justify-content: center;">No hay nungún contacto disponible</span>';
+						}else{
+							foreach ($contacts as $contact) {
+								echo '<button onclick="testModal()" class="Contact inter">'.$contact->getUsername().'</button>';
+							}
+						}
+					?>
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 	<script>
@@ -122,6 +148,7 @@ $chats = Chat::mostrarChats($mysqli, $idUser);
 		// Seleccionar chat
 		document.querySelectorAll('.chat').forEach(function(element) {
 			element.addEventListener('click', function() {
+				console.log('clickeó un chat');
 				chatId = this.getAttribute('data-index');
 
 				document.getElementById("chat_selected").textContent = this.textContent.trim();
@@ -255,9 +282,15 @@ $chats = Chat::mostrarChats($mysqli, $idUser);
 			}, 700);
 
 		})
+
+		function showContacts(){
+			$('#ContactsModal').modal("show");;
+		}
+
+		function testModal(){
+			console.log('test successful');
+		}
 	</script>
-
-
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">

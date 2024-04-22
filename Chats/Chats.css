@@ -2,6 +2,17 @@
     color: white;
 }
 
+.bebas {
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+} 
+
+.inter {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+}
+
 .header-chat{
     background-color: #393E46;
 }
@@ -43,6 +54,11 @@
 .header-chat div div:nth-child(2) img{
     max-width: 40px;
     margin-left: 15px;
+}
+
+.header-chat div:first-child div:nth-child(2) button{
+    background-color: transparent;
+    border: none;
 }
 
 .container-chats .chat-list .chat{
@@ -126,4 +142,32 @@
 .messages .chat-messages .YourMessage span:nth-child(1){
     text-align: left;
     font-size: 12px;
+}
+
+#ContactsModal .Contacts{
+    background-color: #393E46;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 10px 0px 10px 0px;
+}
+
+#ContactsModal .Contacts .Contact{
+    opacity: 80%;
+    width: 40%;
+    background-color: #222831;
+    color: #00ADB5;
+    border: none;
+    margin: 5px 0px 5px 0px;
+    font-size: 15px;
+    padding: 10px 0px;
+    border-radius: 5px;
+}
+
+#ContactsModal .Contacts .Contact:focus{
+    outline: 0;
+}
+
+#ContactsModal .Contacts .Contact:hover{
+    opacity: 100%;
 }

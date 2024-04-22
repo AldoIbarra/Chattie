@@ -2,19 +2,19 @@
 
 class Chat
 {
-    private $ID;
+    private $Id;
     private $Name;
     private $AdminId;
     private $IsGroup;
 
     public function getID()
     {
-        return $this->ID;
+        return $this->Id;
     }
 
-    public function setID($ID)
+    public function setID($Id)
     {
-        $this->ID = $ID;
+        $this->Id = $Id;
     }
 
     public function getName()
@@ -71,11 +71,11 @@ class Chat
     public function save($mysqli)
     {
         $opcion = 'insertar';
-        $ID = 0;
+        $Id = 0;
         $sql = 'CALL sp_gestion_Usuario(?,?,?,?,?,?)';
         $stmt = $mysqli->prepare($sql);
-        $stmt->execute([$opcion, $ID, $this->Name, $this->AdminId, $this->IsGroup, $this->DateBirth]);
-        $this->ID = (int) $stmt->insert_id;
+        $stmt->execute([$opcion, $Id, $this->Name, $this->AdminId, $this->IsGroup, $this->DateBirth]);
+        $this->Id = (int) $stmt->insert_id;
     }
 
     public static function mostrarChats($mysqli, $IdUser)

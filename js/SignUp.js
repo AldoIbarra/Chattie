@@ -33,10 +33,10 @@
       let xhr = new XMLHttpRequest();
   
       const user = {
-        User_name: iUsername.value.trim(),
+        UserName: iUsername.value.trim(),
         Email: iEmail.value.trim(),
-        PasswordU: iPassword.value.trim(),
-        Date_birth: idateBirth.value.trim(),
+        Password: iPassword.value.trim(),
+        DateBirth: idateBirth.value.trim(),
       };
   
       xhr.open("POST", "php/controllers/SignUp.php", true); // true en modo asicrono
@@ -52,7 +52,7 @@
             }
             // Sucess ...
             showModal([{ msg: res.msg }]);
-            window.location.replace("SignIn.html");
+            window.location.replace("SignIn.php");
           }
         } catch (error) {
           // Se imprime el error del servidor

@@ -2,7 +2,7 @@
 
 class Message
 {
-    private $ID;
+    private $Id;
     private $ChatId;
     private $UserId;
     private $Message;
@@ -10,12 +10,12 @@ class Message
 
     public function getID()
     {
-        return $this->ID;
+        return $this->Id;
     }
 
-    public function setID($ID)
+    public function setID($Id)
     {
-        $this->ID = $ID;
+        $this->Id = $Id;
     }
 
     public function getChatId()
@@ -87,7 +87,7 @@ class Message
         $sql = 'CALL sp_gestion_mensajes(?,?,?,?,?,?)';
         $stmt = $mysqli->prepare($sql);
         $stmt->execute([$opcion, 0, $ChatId, $UserId, $Message, ""]);
-        $this->ID = (int) $stmt->insert_id;
+        $this->Id = (int) $stmt->insert_id;
     }
 
     public static function mostrarMensajes($mysqli, $IdMessage)

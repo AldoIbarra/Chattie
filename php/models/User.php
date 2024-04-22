@@ -1,7 +1,7 @@
 <?php
 
 class User {
-    private $ID;
+    private $Id;
     private $UserName;
     private $Email;
     private $Password;
@@ -9,10 +9,10 @@ class User {
     
     
     public function getID() {
-        return $this->ID;
+        return $this->Id;
     }
-    public function setID($ID) {
-        $this->ID = $ID;
+    public function setID($Id) {
+        $this->Id = $Id;
     }
     public function getUserName () {
         return $this->UserName;
@@ -52,8 +52,8 @@ class User {
             isset($json["Password"]) ? $json["Password"] : "",
             isset($json["DateBirth"]) ? $json["DateBirth"] : "",
         );
-        if(isset($json["ID"]))
-            $user->setID((int)$json["ID"]);
+        if(isset($json["Id"]))
+            $user->setID((int)$json["Id"]);
         return $user;
     }
 
@@ -69,11 +69,11 @@ PROCEDURE `sp_gestion_Usuario`
 */
     public function save($mysqli) {     
         $opcion = 'insertar';
-        $ID = 0;
+        $Id = 0;
         $sql = "CALL sp_gestion_Usuario(?,?,?,?,?,?)";    
        $stmt= $mysqli->prepare($sql);
-         $stmt->execute([$opcion, $ID, $this->UserName, $this->Email, $this->Password, $this->DateBirth]);        
-        $this->ID = (int)$stmt->insert_id;
+         $stmt->execute([$opcion, $Id, $this->UserName, $this->Email, $this->Password, $this->DateBirth]);        
+        $this->Id = (int)$stmt->insert_id;
     }
 
     public static function findUserByUsername($mysqli, $Email, $Password) {
@@ -86,14 +86,27 @@ PROCEDURE `sp_gestion_Usuario`
         return $user ? User::parseJson($user) : NULL;
     }
     
-    public static function findUserByID($mysqli, $ID) {
+    public static function findUserByID($mysqli, $Id) {
         $opcion = 'findUserById';
         $sql = "CALL sp_gestion_Usuario(?,?,?,?,?,?)";
         $stmt = $mysqli->prepare($sql);
-        $stmt->execute([$opcion, $ID, "", "", "", ""]);
+        $stmt->execute([$opcion, $Id, "", "", "", ""]);
         $result = $stmt->get_result(); 
         $user = $result->fetch_assoc();
         return $user ? User::parseJson($user) : NULL;
+    }
+    
+    public static function getUserContacts($mysqli, $Id) {
+        $sql = "CALL sp_gestion_Contacts(?)";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->execute([$Id]);
+        $result = $stmt->get_result(); 
+        $Contacts = [];
+        while ($contact = $result->fetch_assoc()) {
+            $Contacts[] = User::parseJson($contact);
+        }
+
+        return $Contacts;
     }
 
     public static function BuscarUsuarios($mysqli, $texto) {
