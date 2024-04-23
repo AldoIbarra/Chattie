@@ -97,4 +97,14 @@ class Chat
     {
         return get_object_vars($this);
     }
+
+    public static function getChatsByUsers($mysqli, $userId, $contactId)
+    {
+        $sql = 'CALL sp_getChatByUsers(?,?)';
+        $stmt = $mysqli->prepare($sql);
+        $stmt->execute([$userId, $contactId]);
+        $result = $stmt->get_result(); 
+        $chat = $result->fetch_assoc();
+        return $chat ? Chat::parseJson($chat) : NULL;
+    }
 }
