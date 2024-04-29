@@ -81,21 +81,36 @@ class Message
         return $Message;
     }
 
-    public function save($mysqli, $ChatId, $UserId ,$Message)
+    public function save($mysqli, $ChatId, $UserId, $Message)
     {
-        $opcion = 'insertar';
+        /*$opcion = 'insertar';
         $sql = 'CALL sp_gestion_mensajes(?,?,?,?,?,?)';
         $stmt = $mysqli->prepare($sql);
-        $stmt->execute([$opcion, 0, $ChatId, $UserId, $Message, ""]);
+        $stmt->execute([$opcion, 0, $ChatId, $UserId, $Message, ""]);*/
+        $sql = "INSERT INTO Messages(
+            ChatId, UserId, Message, CreationDate, Status
+            )VALUES( ?,?,?, now(), 1 )";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("iis", $ChatId, $UserId, $Message);
+        $stmt->execute();
         $this->Id = (int) $stmt->insert_id;
     }
 
     public static function mostrarMensajes($mysqli, $IdMessage)
     {
-        $opcion = 'Mostrar';
+        /*$opcion = 'Mostrar';
         $sql = 'CALL sp_gestion_mensajes(?,?,?,?,?,?)';
         $stmt = $mysqli->prepare($sql);
-        $stmt->execute([$opcion, 0, $IdMessage, 0, '', '']);
+        $stmt->execute([$opcion, 0, $IdMessage, 0, '', '']);*/
+        $sql = "SELECT u.UserName AS 'UserId', m.Message, DATE_FORMAT(m.CreationDate, '%Y-%m-%d %H:%i') AS CreationDate 
+        FROM Messages m
+        INNER JOIN Chats c ON m.ChatId = c.Id
+        INNER JOIN Users u ON m.UserId = u.Id
+        WHERE c.Id = ?
+        ORDER BY m.CreationDate";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("i", $IdMessage);
+        $stmt->execute();
         $result = $stmt->get_result();
         $messages = [];
         while ($message = $result->fetch_assoc()) {

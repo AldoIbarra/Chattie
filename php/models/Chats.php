@@ -68,22 +68,29 @@ class Chat
         return $Chat;
     }
 
-    public function save($mysqli)
-    {
-        $opcion = 'insertar';
-        $Id = 0;
-        $sql = 'CALL sp_gestion_Usuario(?,?,?,?,?,?)';
-        $stmt = $mysqli->prepare($sql);
-        $stmt->execute([$opcion, $Id, $this->Name, $this->AdminId, $this->IsGroup, $this->DateBirth]);
-        $this->Id = (int) $stmt->insert_id;
-    }
-
     public static function mostrarChats($mysqli, $IdUser)
     {
-        $opcion = 'mostrar';
+        /*$opcion = 'mostrar';
         $sql = 'CALL sp_gestion_Chats(?,?,?,?,?,?)';
         $stmt = $mysqli->prepare($sql);
-        $stmt->execute([$opcion, 0, '', '', '', $IdUser]);
+        $stmt->execute([$opcion, 0, '', '', '', $IdUser]);*/
+
+        $sql = "SELECT c.Id AS 'Id',
+        CASE
+            WHEN c.IsGroup = 1 THEN c.Name  -- Si es un grupo, muestra el nombre del grupo
+            ELSE (SELECT u2.UserName        -- Si no es un grupo, muestra el nombre del otro usuario
+                  FROM Users u2 
+                  INNER JOIN UserChats uc2 ON u2.Id = uc2.UserId 
+                  WHERE uc2.ChatId = c.Id AND uc2.UserId != 2)
+        END AS 'Name',
+        c.IsGroup
+    FROM Chats c
+    INNER JOIN UserChats uc ON uc.ChatId = c.Id
+    WHERE uc.UserId = ?";
+
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("i", $IdUser);
+        $stmt->execute();
         $result = $stmt->get_result();
         $Chats = [];
         while ($chat = $result->fetch_assoc()) {
