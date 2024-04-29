@@ -93,7 +93,7 @@ class Message
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("iis", $ChatId, $UserId, $Message);
         $stmt->execute();
-        $this->Id = (int) $stmt->insert_id;
+         $this->Id = (int) $stmt->insert_id;
     }
 
     public static function mostrarMensajes($mysqli, $IdMessage)

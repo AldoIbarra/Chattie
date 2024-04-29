@@ -75,7 +75,7 @@ class Chat
         $stmt = $mysqli->prepare($sql);
         $stmt->execute([$opcion, 0, '', '', '', $IdUser]);*/
 
-        $sql = "SELECT c.Id AS 'Id',
+         $sql = "SELECT c.Id AS 'Id',
         CASE
             WHEN c.IsGroup = 1 THEN c.Name  -- Si es un grupo, muestra el nombre del grupo
             ELSE (SELECT u2.UserName        -- Si no es un grupo, muestra el nombre del otro usuario
@@ -107,9 +107,21 @@ class Chat
 
     public static function getChatsByUsers($mysqli, $userId, $contactId)
     {
-        $sql = 'CALL sp_getChatByUsers(?,?)';
+        /*$sql = 'CALL sp_getChatByUsers(?,?)';
         $stmt = $mysqli->prepare($sql);
-        $stmt->execute([$userId, $contactId]);
+        $stmt->execute([$userId, $contactId]);*/
+        $sql = "SELECT
+        c.Id AS 'Id',
+        u.UserName AS 'Name',
+        0 AS 'IsGroup'
+        FROM Chats c
+        INNER JOIN Userchats uc ON c.Id = uc.ChatId
+        INNER JOIN UserChats uc2 ON c.Id = uc.ChatId
+        INNER JOIN Users u ON uc2.UserId = u.Id
+        WHERE uc.UserId = ? AND uc2.UserId = ? AND uc.ChatId = uc2.ChatId AND c.IsGroup = 0";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("ii", $userId, $contactId);
+        $stmt->execute();
         $result = $stmt->get_result(); 
         $chat = $result->fetch_assoc();
         return $chat ? Chat::parseJson($chat) : NULL;

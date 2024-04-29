@@ -133,8 +133,8 @@ class User
         $Contacts = [];
         while ($contact = $result->fetch_assoc()) {
             $Contacts[] = User::parseJson($contact);
-        }
-
+         }
+ 
         return $Contacts;
     }
 
