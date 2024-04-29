@@ -116,7 +116,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 				<!-- Modal Header -->
 				<div class="modal-header">
 					<h4 class="modal-title">Inicia una conversación</h4>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
 				</div>
 
 				<!-- Modal body -->
@@ -126,7 +126,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 							echo '<span style="display: flex; justify-content: center;">No hay nungún contacto disponible</span>';
 						}else{
 							foreach ($contacts as $contact) {
-								echo '<button onclick="testModal()" class="Contact inter">'.$contact->getUsername().'</button>';
+								echo '<button onClick="testModal('.$idUser.',\''.$contact->getID().'\')" class="Contact inter">'.$contact->getUsername().' </button>';
 							}
 						}
 					?>
@@ -148,65 +148,97 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 		// Seleccionar chat
 		document.querySelectorAll('.chat').forEach(function(element) {
 			element.addEventListener('click', function() {
-				console.log('clickeó un chat');
-				chatId = this.getAttribute('data-index');
 
-				document.getElementById("chat_selected").textContent = this.textContent.trim();
-				if (this.getAttribute('data-estado') === '0') {
-					document.getElementById("user_status").textContent = "No disponible";
-				} else {
-					document.getElementById("user_status").textContent = "";
-				}
+				setChatReady(this.getAttribute('data-index'), this.textContent.trim(), this.getAttribute('data-estado'));
 
-				$.ajax({
-					type: "POST",
-					url: "../php/controllers/showMessages.php",
-					data: {
-						Id: chatId
-					},
-					success: function(data) {
-						try {
-							var infoChat = data;
-							$('#chat-messages').empty();
-							if (infoChat.messages.length > 0) {
-
-								infoChat.messages.forEach(function(row) {
-									var messageClass = (row.UserId ===
-										'<?php echo $user->getUserName(); ?>'
-									) ? "MyMessage" : "YourMessage";
-									var messageHTML = '<div class="' + messageClass +
-										'">';
-									if (messageClass === "YourMessage") {
-										messageHTML += '<span>' + row.UserId + '</span>';
-									}
-									messageHTML += '<span>' + row.Message + '</span>';
-									messageHTML += '<span>' + row.CreationDate +
-										'</span>';
-									messageHTML += '</div>';
-
-									$('#chat-messages').append(messageHTML);
-									$('.chat-messages').scrollTop($('.chat-messages')[0]
-										.scrollHeight);
-
-								});
-							} else {
-								var noMessages = '<span>No hay mensajes disponibles</span>';
-								$('.chat-messages').append(noMessages);
-							}
-						} catch (error) {
-							console.error("Error al analizar JSON:", error);
-						}
-					},
-					error: function() {
-						console.log("Error al obtener mensajes.");
-					},
-				});
+				showMessages(false);
 			});
 		});
 
 		// Mandar mensaje
 		var sendMessage = document.getElementById("sendMessage");
 		sendMessage.addEventListener("click", function(event) {
+			sendMsg();
+		})
+
+
+		$(document).ready(function() {
+			//Recargar mensajes
+			setInterval(function() {
+				if (chatId != "0")
+					showMessages(true);
+			}, 700);
+
+		})
+
+		function showContacts(){
+			$('#ContactsModal').modal("show");;
+		}
+
+		function testModal(actualUserId, contactId){
+			checkIfChatExists(actualUserId, contactId);
+		}
+
+		function setChatReady(chatIndex, chatName, status){
+			chatId = chatIndex;
+			document.getElementById("chat_selected").textContent = chatName;
+
+			if (status === '0') {
+					document.getElementById("user_status").textContent = "No disponible";
+				} else {
+					document.getElementById("user_status").textContent = "";
+			}
+		}
+
+		function showMessages(onInterval){
+			$.ajax({
+				type: "POST",
+				url: "../php/controllers/showMessages.php",
+				data: {
+					Id: chatId
+				},
+				success: function(data) {
+					try {
+						var infoChat = data;
+						$('.chat-messages').empty();
+						if (infoChat.messages.length > 0) {
+
+							infoChat.messages.forEach(function(row) {
+								var messageClass = (row.UserId ===
+									'<?php echo $user->getUserName(); ?>'
+								) ? "MyMessage" : "YourMessage";
+								var messageHTML = '<div class="' + messageClass +
+									'">';
+								if (messageClass === "YourMessage") {
+									messageHTML += '<span>' + row.UserId + '</span>';
+								}
+								messageHTML += '<span>' + row.Message + '</span>';
+								messageHTML += '<span>' + row.CreationDate +
+									'</span>';
+								messageHTML += '</div>';
+
+								$('#chat-messages').append(messageHTML);
+
+								if(!onInterval){
+									$('.chat-messages').scrollTop($('.chat-messages')[0]
+										.scrollHeight);
+								}
+							});
+						} else {
+							var noMessages = '<span>No hay mensajes disponibles</span>';
+							$('.chat-messages').append(noMessages);
+						}
+					} catch (error) {
+						console.error("Error al analizar JSON:", error);
+					}
+				},
+				error: function() {
+					console.log("Error al obtener mensajes.");
+				},
+			});
+		}
+
+		function sendMsg(){
 			event.preventDefault();
 			if ($("#messageText").val() != "") {
 
@@ -228,67 +260,33 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 					}
 				})
 			}
-		})
-
-
-		$(document).ready(function() {
-
-
-			//Recargar mensajes
-			setInterval(function() {
-				if (chatId != "0")
-					$.ajax({
-						type: "POST",
-						url: "../php/controllers/showMessages.php",
-						data: {
-							Id: chatId
-						},
-						success: function(data) {
-							try {
-								var infoChat = data;
-								$('.chat-messages').empty();
-								if (infoChat.messages.length > 0) {
-
-									infoChat.messages.forEach(function(row) {
-
-										var messageClass = (row.UserId ===
-											'<?php echo $user->getUserName(); ?>'
-										) ? "MyMessage" : "YourMessage";
-										var messageHTML = '<div class="' + messageClass +
-											'">';
-										if (messageClass === "YourMessage") {
-											messageHTML += '<span>' + row.UserId + '</span>';
-										}
-										messageHTML += '<span>' + row.Message + '</span>';
-										messageHTML += '<span>' + row.CreationDate +
-											'</span>';
-										messageHTML += '</div>';
-
-										$('#chat-messages').append(messageHTML);
-
-									});
-								} else {
-									var noMessages = '<span>No hay mensajes disponibles</span>';
-									$('.chat-messages').append(noMessages);
-								}
-							} catch (error) {
-								console.error("Error al analizar JSON:", error);
-							}
-						},
-						error: function() {
-							console.log("Error al obtener mensajes.");
-						},
-					});
-			}, 700);
-
-		})
-
-		function showContacts(){
-			$('#ContactsModal').modal("show");;
 		}
 
-		function testModal(){
-			console.log('test successful');
+		function checkIfChatExists(actualUserId, contactId){
+			$.ajax({
+				type: "POST",
+				url: "../php/controllers/getChatsByUsers.php",
+				data: {
+					userId: actualUserId,
+					contactId: contactId
+				},
+				success: function(data) {
+					try {
+						var chat = data;
+						if(chat!= null){
+							$('#ContactsModal').modal("hide");;
+							setChatReady(chat.Id, chat.Name, 0);
+						}else{
+							console.log('se tiene que crear un chat');
+						}
+					} catch (error) {
+						console.error("Error al analizar JSON:", error);
+					}
+				},
+				error: function() {
+					console.log("Error al obtener mensajes.");
+				},
+			});
 		}
 	</script>
 

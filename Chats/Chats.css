@@ -152,6 +152,10 @@
     padding: 10px 0px 10px 0px;
 }
 
+#ContactsModal .modal-header{
+    background-color: #222831;
+}
+
 #ContactsModal .Contacts .Contact{
     opacity: 80%;
     width: 40%;
@@ -170,4 +174,8 @@
 
 #ContactsModal .Contacts .Contact:hover{
     opacity: 100%;
+}
+
+#ContactsModal .modal-footer{
+    background-color: #222831;
 }
