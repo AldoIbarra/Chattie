@@ -1,0 +1,189 @@
+  
+.bebas {
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+  
+.inter {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+}
+
+body{
+    color: white;
+    background-color: red;
+    .header-chat {
+        background-color: #393E46;
+        div {
+            padding: 7px;
+            position: relative;
+            display: flex;
+            flex-direction: row;
+    
+            div {
+                &:first-child {
+                    display: flex;
+                    flex-basis: auto;
+                    flex-direction: column;
+                    flex-grow: 1;
+                    justify-content: center;
+                    min-width: 0;
+                }
+            
+                &:nth-child(2) img {
+                    max-width: 40px;
+                    margin-left: 15px;
+                }
+            }
+    
+            &:first-child div:nth-child(2) button {
+                background-color: transparent;
+                border: none;
+            }
+        }
+    }
+  
+    .container-chats {
+        height: 88vh;
+        .chat-list{
+            background-color: #222831;
+            padding-top: 15px;
+            div{
+                background-color: #393E46;
+                &:hover {
+                    background-color: #5E636A;
+                }
+            }
+            .chat {
+                height: 62px;
+                display: flex;
+                flex-basis: auto;
+                flex-direction: column;
+                flex-grow: 1;
+                justify-content: center;
+                cursor: pointer;
+                margin-bottom: 15px;
+                padding-left: 15px;
+            }
+        }
+    }
+  
+    .messages {
+        background-image: url("Back-Chat.svg");
+        background-repeat: repeat;
+        .footer-container{
+            footer {
+                background-color: black;
+                position: absolute;
+                bottom: 1vh;
+                max-width: 55%;
+            
+                img {
+                    max-width: 35px;
+                }
+            
+                input {
+                    background-color: #393E46;
+                    border: none;
+                    border-bottom: 10px solid #222831;
+                    width: 100%;
+            
+                    &:focus {
+                    outline: 0;
+                    }
+                }
+            
+                div{ 
+                    div{
+                        div{
+                            padding: 5px;
+                        }
+                    }
+                }
+            }
+        }
+    
+        .chat-messages {
+            position: relative;
+            max-height: 78vh;
+            overflow: hidden;
+            overflow-y: scroll;
+    
+            .messageContainer{
+                .YourMessage {
+                    background-color: #393E46;
+                    display: flex;
+                    flex-direction: column;
+                    max-width: fit-content;
+                    margin: 10px;
+                    padding: 5px;
+                    border-radius: 5px;
+                    span{
+                        &:first-child{
+                            text-align: left;
+                            font-size: 12px;
+                        }
+                        &:nth-child(3){
+                            text-align: end;
+                            font-size: 12px;
+                        }
+                    }
+                }
+        
+                .MyMessage {
+                    background-color: #00ADB5;
+                    display: flex;
+                    flex-direction: column;
+                    max-width: fit-content;
+                    margin: 10px;
+                    padding: 5px;
+                    border-radius: 5px;
+                    span{
+                        &:nth-child(2){
+                            text-align: end;
+                            font-size: 12px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+  
+    #ContactsModal {
+        .Contacts {
+            background-color: #393E46;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding: 10px 0px 10px 0px;
+            .Contact {
+                opacity: 80%;
+                width: 40%;
+                background-color: #222831;
+                color: #00ADB5;
+                border: none;
+                margin: 5px 0px 5px 0px;
+                font-size: 15px;
+                padding: 10px 0px;
+                border-radius: 5px;
+            
+                &:focus {
+                    outline: 0;
+                }
+            
+                &:hover {
+                    opacity: 100%;
+                }
+            }
+        }
+    
+        .modal-header {
+            background-color: #222831;
+        }
+    
+        .modal-footer {
+            background-color: #222831;
+        }
+    }
+}

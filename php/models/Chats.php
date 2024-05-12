@@ -81,7 +81,7 @@ class Chat
             ELSE (SELECT u2.UserName        -- Si no es un grupo, muestra el nombre del otro usuario
                   FROM Users u2 
                   INNER JOIN UserChats uc2 ON u2.Id = uc2.UserId 
-                  WHERE uc2.ChatId = c.Id AND uc2.UserId != 2)
+                  WHERE uc2.ChatId = c.Id AND uc2.UserId != ?)
         END AS 'Name',
         c.IsGroup
     FROM Chats c
@@ -89,7 +89,7 @@ class Chat
     WHERE uc.UserId = ?";
 
         $stmt = $mysqli->prepare($sql);
-        $stmt->bind_param("i", $IdUser);
+        $stmt->bind_param("ii", $IdUser, $IdUser);
         $stmt->execute();
         $result = $stmt->get_result();
         $Chats = [];
