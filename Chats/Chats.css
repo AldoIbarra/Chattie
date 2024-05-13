@@ -34,7 +34,8 @@ body .header-chat div div:nth-child(2) img {
   max-width: 40px;
   margin-left: 15px;
 }
-body .header-chat div:first-child div:nth-child(2) button {
+body .header-chat div:first-child div:nth-child(2) button, 
+body .header-chat div:nth-child(2) div:nth-child(2) button{
   background-color: transparent;
   border: none;
 }
@@ -151,6 +152,10 @@ body #ContactsModal .modal-header {
   background-color: #222831;
 }
 body #ContactsModal .modal-footer {
+  background-color: #222831;
+}
+body #myModal .modal-header,
+body #myModal .modal-body{
   background-color: #222831;
 }
 
