@@ -18,3 +18,12 @@ SET SQL_SAFE_UPDATES = 0; -- esto es para desactivar el "Safe Update Mode"
 
 -- nueva columna para guardar los mensajes encriptados
 ALTER TABLE Messages ADD COLUMN DataEncrypted VARBINARY(250);
+
+
+ALTER TABLE Users
+ADD COLUMN Status INT DEFAULT 1 #0 = Desconectado, 1 = En linea, 2 = Ocupado
+
+
+-- Con esta columna se sabra si el usuario esta en linea
+ALTER TABLE Users
+ADD COLUMN LastTimeOnline DATETIME DEFAULT CURRENT_TIMESTAMP; 
