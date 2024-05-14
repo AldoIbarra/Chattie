@@ -9,7 +9,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     header('Content-Type: application/json');
     $mysqli = db::connect();
 
+    
     $user = User::findUserByUsername($mysqli,$json["email"],$json["password"]);
+    $status = 1; // Se cambia el estatus del usuario a "En linea"
+    User::changeStatusUserToOnline($mysqli, $user->getID(), $status); //Cambia el estatus del usuario a "En linea" en cuanto inicia sesión
 
     $json_response = ["success" => true];
     if($user) {

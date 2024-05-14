@@ -129,6 +129,15 @@ class User
         return $user ? User::parseJson($user) : null;
     }
 
+    public static function changeStatusUserToOnline($mysqli, $Id, $status){
+        $sql = "UPDATE Users 
+        SET Status = ?
+        WHERE Id = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("ii", $status, $Id);
+        $stmt->execute();
+    }
+
     public static function getUserContacts($mysqli, $Id)
     {
         /*$sql = "CALL sp_gestion_Contacts(?)";

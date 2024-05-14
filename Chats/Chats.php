@@ -80,7 +80,8 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 					</select>
 				</div>
 				<div>
-					<a href=""><img src="AddIcon.svg" alt=""></a>
+				<button onclick="closeSesion()"><img src="Close_square_fill.svg" alt=""></button>	
+				<a href=""><img src="AddIcon.svg" alt=""></a>
 					<button onclick="showContacts()"><img src="MessageIcon.svg" alt=""></button>
 					<a href=""><img src="UserIcon.svg" alt=""></a>
 				</div>
@@ -339,7 +340,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 					try {
 						var chat = data;
 						if (chat != null) {
-							$('#ContactsModal').modal("hide");;
+							$('#ContactsModal').modal("hide");
 							setChatReady(chat.Id, chat.Name, 0);
 						} else {
 							console.log('se tiene que crear un chat');
@@ -433,6 +434,24 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 				// },
 				error: function() {
 					console.log("Error al cambiar el estatus");
+				},
+			});
+		}
+
+		function closeSesion(){
+			$.ajax({
+				type: "POST",
+				url: "../php/controllers/logout.php",
+				data: {
+					Id: <?php echo $idUser; ?>
+				},
+				success: function() {
+					//header("Location: ../../signIn.php");
+					window.location.replace("../signIn.php");
+
+				},
+				error: function() {
+					console.log("Error al cerrar sesión");
 				},
 			});
 		}
