@@ -7,6 +7,7 @@ class User
     private $Email;
     private $Password;
     private $DateBirth;
+    private $Status;
 
 
     public function getID()
@@ -49,13 +50,21 @@ class User
     {
         $this->DateBirth = $DateBirth;
     }
-
-    public function __construct($UserName, $Email, $Password, $DateBirth)
+    public function getStatus()
+    {
+        return $this->Status;
+    }
+    public function setStatus($Status)
+    {
+        $this->Status = $Status;
+    }
+    public function __construct($UserName, $Email, $Password, $DateBirth, $Status)
     {
         $this->UserName = $UserName;
         $this->Email = $Email;
         $this->Password = $Password;
         $this->DateBirth = $DateBirth;
+        $this->Status = $Status;
     }
     public static function parseJson($json)
     {
@@ -64,6 +73,7 @@ class User
             isset($json["Email"]) ? $json["Email"] : "",
             isset($json["Password"]) ? $json["Password"] : "",
             isset($json["DateBirth"]) ? $json["DateBirth"] : "",
+            isset($json["Status"]) ? $json["Status"] : "",
         );
         if(isset($json["Id"])) {
             $user->setID((int)$json["Id"]);
@@ -151,6 +161,25 @@ class User
             $users[] = User::parseJson($user);
         }
         return $users;
+    }
+
+    public static function saveStatus($mysqli, $status, $idUser){
+        $sql = "UPDATE Users 
+        SET Status = ?
+        WHERE Id = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("ii", $status, $idUser);
+        $stmt->execute();
+    }
+
+    // guardar la ultima fecha y hora online
+    public static function saveLastTimeOnline($mysqli, $idUser){ 
+        $sql = "UPDATE Users 
+        SET LastTimeOnline = current_timestamp()
+        WHERE Id = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("i", $idUser);
+        $stmt->execute();
     }
 
     public function toJSON()

@@ -158,5 +158,19 @@ body #myModal .modal-header,
 body #myModal .modal-body{
   background-color: #222831;
 }
-
+.custom-select {
+  position: relative;
+  color: white;
+  background-color: transparent;
+  line-height: inherit;
+  content: "";
+  right: 6px;
+  border: 1px solid transparent;
+  border-color: transparent transparent transparent;
+}
+select option {
+  background-color: #393E46;
+  color: #ffffff;
+  border: 1px solid transparent;
+}
 /*# sourceMappingURL=chats.css.map */

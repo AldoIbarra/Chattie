@@ -67,7 +67,11 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 			<div class="col-4">
 				<div>
 					<span><?php echo $user->getUsername(); ?></span>
-					<span>En línea</span>
+					<!-- <span>En línea</span> -->
+					<select class="custom-select" id="statusSelect" onchange="saveStatusUser()">
+						<option value="1">En línea</option>
+						<option value="0">Desconectado</option>
+					</select>
 				</div>
 				<div>
 					<a href=""><img src="AddIcon.svg" alt=""></a>
@@ -162,6 +166,9 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 	<script>
+		var statusSelect = document.getElementById("statusSelect");
+        	
+		
 		var chatId = "0";
 		// Seleccionar chat
 		document.querySelectorAll('.chat').forEach(function(element) {
@@ -186,8 +193,10 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 			setInterval(function() {
 				if (chatId != "0")
 					showMessages(true);
-			}, 700);
 
+					if(statusSelect.value == 1)
+					isUserOnline();
+			}, 700);
 		})
 
 		function showContacts() {
@@ -351,10 +360,58 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 					}
 				},
 				error: function() {
-					console.log("Error al obtener mensajes.");
+					console.log("Error al encriptar los mensajes.");
 				},
 			});
 		}
+
+		function isUserOnline(){
+			var selectedValue = statusSelect.value;
+			$.ajax({
+				type: "POST",
+				url: "../php/controllers/isUserOnline.php",
+				data: {
+					Id: <?php echo $idUser; ?>
+				},
+				success: function(data) {
+					try {
+						console.log("se esta actualizando la hora del usuario");
+					} catch (error) {
+						console.error("Error al analizar JSON:", error);
+					}
+				},
+				error: function() {
+					console.log("Error al cambiar el estatus");
+				},
+			});
+		}
+
+		function saveStatusUser(){
+			//var statusSelect = document.getElementById("statusSelect");
+        	var selectedValue = statusSelect.value;
+			$.ajax({
+				type: "POST",
+				url: "../php/controllers/saveStatusUser.php",
+				data: {
+					status: selectedValue,
+					Id: <?php echo $idUser; ?>
+				},
+				success: function(data) {
+					try {
+
+						console.log(data);
+
+						
+					} catch (error) {
+						console.error("Error al analizar JSON:", error);
+					}
+				},
+				error: function() {
+					console.log("Error al cambiar el estatus");
+				},
+			});
+		}
+
 	</script>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
