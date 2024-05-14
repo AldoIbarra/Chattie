@@ -6,6 +6,7 @@ class Chat
     private $Name;
     private $AdminId;
     private $IsGroup;
+    private $StatusUser;
 
     public function getID()
     {
@@ -47,11 +48,22 @@ class Chat
         $this->IsGroup = $IsGroup;
     }
 
-    public function __construct($Name, $AdminId, $IsGroup)
+    public function getStatusUser()
+    {
+        return $this->StatusUser;
+    }
+
+    public function setStatusUser($StatusUser)
+    {
+        $this->StatusUser = $StatusUser;
+    }
+
+    public function __construct($Name, $AdminId, $IsGroup, $StatusUser)
     {
         $this->Name = $Name;
         $this->AdminId = $AdminId;
         $this->IsGroup = $IsGroup;
+        $this->StatusUser = $StatusUser;
     }
 
     public static function parseJson($json)
@@ -60,6 +72,7 @@ class Chat
             isset($json['Name']) ? $json['Name'] : '',
             isset($json['AdminId']) ? $json['AdminId'] : '',
             isset($json['IsGroup']) ? $json['IsGroup'] : '',
+            isset($json['Status']) ? $json['Status'] : '',
         );
         if (isset($json['Id'])) {
             $Chat->setID((int) $json['Id']);
@@ -75,7 +88,7 @@ class Chat
         $stmt = $mysqli->prepare($sql);
         $stmt->execute([$opcion, 0, '', '', '', $IdUser]);*/
 
-         $sql = "SELECT c.Id AS 'Id',
+        $sql = "SELECT c.Id AS 'Id',
         CASE
             WHEN c.IsGroup = 1 THEN c.Name  -- Si es un grupo, muestra el nombre del grupo
             ELSE (SELECT u2.UserName        -- Si no es un grupo, muestra el nombre del otro usuario
@@ -83,7 +96,15 @@ class Chat
                   INNER JOIN UserChats uc2 ON u2.Id = uc2.UserId 
                   WHERE uc2.ChatId = c.Id AND uc2.UserId != ?)
         END AS 'Name',
-        c.IsGroup
+        c.IsGroup,
+        CASE                                
+        WHEN c.IsGroup = 0 THEN                 -- Si no es grupo, devuelve el status del otro usuario
+        (SELECT u2.Status                       
+             FROM Users u2
+             INNER JOIN UserChats uc2 ON u2.Id = uc2.UserId
+             WHERE uc2.ChatId = c.Id AND uc2.UserId != 1)    
+        ELSE NULL                               -- De lo contrario devuelve NULL
+    END AS 'Status'                         
     FROM Chats c
     INNER JOIN UserChats uc ON uc.ChatId = c.Id
     WHERE uc.UserId = ?";
@@ -122,8 +143,8 @@ class Chat
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("ii", $userId, $contactId);
         $stmt->execute();
-        $result = $stmt->get_result(); 
+        $result = $stmt->get_result();
         $chat = $result->fetch_assoc();
-        return $chat ? Chat::parseJson($chat) : NULL;
+        return $chat ? Chat::parseJson($chat) : null;
     }
 }

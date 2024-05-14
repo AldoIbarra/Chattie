@@ -69,8 +69,14 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 					<span><?php echo $user->getUsername(); ?></span>
 					<!-- <span>En línea</span> -->
 					<select class="custom-select" id="statusSelect" onchange="saveStatusUser()">
-						<option value="1">En línea</option>
-						<option value="0">Desconectado</option>
+						<option value="1" <?php if ($user->getStatus() == 1) {
+						    echo "selected";
+						} ?>
+							>En línea</option>
+						<option value="0" <?php if ($user->getStatus() == "0") {
+						    echo "selected";
+						} ?>>No disponible
+						</option>
 					</select>
 				</div>
 				<div>
@@ -97,7 +103,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
                         echo '<span style="display: flex; justify-content: center;">Aún no existen chats</span>';
                     } else {
                         foreach ($chats as $chat) {
-                            echo '<div class="chat" id="chat'.$chat->getID().'" data-index="'.$chat->getID().'" data-estado="'.$chat->getIsGroup().'">'.$chat->getName().'</div>';
+                            echo '<div class="chat" id="chat'.$chat->getID().'" data-index="'.$chat->getID().'" data-group="'.$chat->getIsGroup().'" data-status="'.$chat->getStatusUser().'"   >'.$chat->getName().'</div>';
                         }
                     }
 
@@ -167,15 +173,16 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 
 	<script>
 		var statusSelect = document.getElementById("statusSelect");
-        	
-		
+
+
 		var chatId = "0";
+		var chatIsGroup = "0";
 		// Seleccionar chat
 		document.querySelectorAll('.chat').forEach(function(element) {
 			element.addEventListener('click', function() {
 
 				setChatReady(this.getAttribute('data-index'), this.textContent.trim(), this.getAttribute(
-					'data-estado'));
+					'data-status'), this.getAttribute('data-group'));
 
 				showMessages(false);
 			});
@@ -188,13 +195,14 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 		})
 
 
+
 		$(document).ready(function() {
 			//Recargar mensajes
 			setInterval(function() {
 				if (chatId != "0")
 					showMessages(true);
 
-					if(statusSelect.value == 1)
+				if (statusSelect.value == 1)
 					isUserOnline();
 			}, 700);
 		})
@@ -207,47 +215,67 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 			checkIfChatExists(actualUserId, contactId);
 		}
 
-		function setChatReady(chatIndex, chatName, status) {
+		function setChatReady(chatIndex, chatName, status, indexisGroup) {
 			chatId = chatIndex;
+			chatIsGroup = indexisGroup;
 			document.getElementById("chat_selected").textContent = chatName;
 
-			if (status === '0') {
+			if (status == "0") {
 				document.getElementById("user_status").textContent = "No disponible";
-			} else {
+			} else if (status == 1){
+				document.getElementById("user_status").textContent = "En línea";
+			}
+			else {
+				document.getElementById("user_status").textContent = "";
+			}
+		}
+
+		
+		function changeIconEncrypt(isDataEncrypted){     // cambia el icono/boton para encriptar los  mensajes
+			var img = document.getElementById('isDataEncrypted');
+			if (isDataEncrypted) {
+									img.src = 'Lock_fill.svg'; // esta encriptado
+								} else {
+									img.src = 'Unlock_fill.svg'; // no esta encriptado
+								}
+		}
+
+		function changeStatusUser(status){
+			if (status == 0) {
+				document.getElementById("user_status").textContent = "No disponible";
+			} else if (status == 1){
+				document.getElementById("user_status").textContent = "En línea";
+			}
+			else {
 				document.getElementById("user_status").textContent = "";
 			}
 		}
 
 		function showMessages(onInterval) {
-			var img = document.getElementById('isDataEncrypted');
 			$.ajax({
 				type: "POST",
 				url: "../php/controllers/showMessages.php",
 				data: {
 					Id: chatId
 				},
-				success: function(data) {
+				success: function(infoChat) {
 					try {
-						var infoChat = data;
 						$('.chat-messages').empty();
-
 						// checar si el chat esta encriptado o no
 						if (infoChat.messages.length > 0) {
+							changeIconEncrypt(infoChat.messages[0].isDataEncrypted);
 							infoChat.messages.forEach(function(row) {
-								if (row.isDataEncrypted) {
-									img.src = 'Lock_fill.svg'; // esta encriptado
-								} else {
-									img.src = 'Unlock_fill.svg'; // no esta encriptado
-								}
-
 								var messageClass = (row.UserId ===
 									'<?php echo $user->getUserName(); ?>'
-								) ? "MyMessage" : "YourMessage";
+								) ? "MyMessage" : (chatIsGroup === "1" ? "YourMessageGroup" : "YourMessage");
 								var messageHTML = '<div class="messageContainer"><div class="' +
 									messageClass +
 									'">';
-								if (messageClass === "YourMessage") {
+								if (messageClass === "YourMessageGroup") {
 									messageHTML += '<span>' + row.UserId + '</span>';
+								}
+								else if (messageClass === "YourMessage"){
+									changeStatusUser(row.statusUser);
 								}
 								messageHTML += '<span>' + row.Message + '</span>';
 								messageHTML += '<span>' + row.CreationDate +
@@ -365,7 +393,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 			});
 		}
 
-		function isUserOnline(){
+		function isUserOnline() {
 			var selectedValue = statusSelect.value;
 			$.ajax({
 				type: "POST",
@@ -373,22 +401,22 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 				data: {
 					Id: <?php echo $idUser; ?>
 				},
-				success: function(data) {
-					try {
-						console.log("se esta actualizando la hora del usuario");
-					} catch (error) {
-						console.error("Error al analizar JSON:", error);
-					}
-				},
+				// success: function(data) {
+				// 	try {
+				// 		console.log("se esta actualizando la hora del usuario");
+				// 	} catch (error) {
+				// 		console.error("Error al analizar JSON:", error);
+				// 	}
+				// },
 				error: function() {
 					console.log("Error al cambiar el estatus");
 				},
 			});
 		}
 
-		function saveStatusUser(){
+		function saveStatusUser() {
 			//var statusSelect = document.getElementById("statusSelect");
-        	var selectedValue = statusSelect.value;
+			var selectedValue = statusSelect.value;
 			$.ajax({
 				type: "POST",
 				url: "../php/controllers/saveStatusUser.php",
@@ -396,22 +424,18 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 					status: selectedValue,
 					Id: <?php echo $idUser; ?>
 				},
-				success: function(data) {
-					try {
-
-						console.log(data);
-
-						
-					} catch (error) {
-						console.error("Error al analizar JSON:", error);
-					}
-				},
+				// success: function(data) {
+				// 	try {
+				// 		console.log(data);
+				// 	} catch (error) {
+				// 		console.error("Error al analizar JSON:", error);
+				// 	}
+				// },
 				error: function() {
 					console.log("Error al cambiar el estatus");
 				},
 			});
 		}
-
 	</script>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

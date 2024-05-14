@@ -8,6 +8,7 @@ class Message
     private $Message;
     private $CreationDate;
     private $isDataEncrypted;
+    private $statusUser;
 
     public function getID()
     {
@@ -69,13 +70,24 @@ class Message
         $this->isDataEncrypted = $isDataEncrypted;
     }
 
-    public function __construct($ChatId, $UserId, $Message, $CreationDate, $isDataEncrypted)
+    public function getisstatusUser()
+    {
+        return $this->isstatusUser;
+    }
+
+    public function setisstatusUser($isstatusUser)
+    {
+        $this->isstatusUser = $isstatusUser;
+    }
+
+    public function __construct($ChatId, $UserId, $Message, $CreationDate, $isDataEncrypted, $statusUser)
     {
         $this->ChatId = $ChatId;
         $this->UserId = $UserId;
         $this->Message = $Message;
         $this->CreationDate = $CreationDate;
         $this->isDataEncrypted = $isDataEncrypted;
+        $this->isstatusUser = $isstatusUser;
     }
 
     public static function parseJson($json)
@@ -86,6 +98,7 @@ class Message
             isset($json['Message']) ? $json['Message'] : '',
             isset($json['CreationDate']) ? $json['CreationDate'] : '',
             isset($json['isDataEncrypted']) ? $json['isDataEncrypted'] : '',
+            isset($json['isstatusUser']) ? $json['isstatusUser'] : '',
         );
         if (isset($json['Id'])) {
             $Message->setID((int) $json['Id']);
@@ -120,7 +133,8 @@ class Message
         WHEN c.isDataEncrypted = 1 THEN AES_DECRYPT(m.DataEncrypted, 'AES') 
         ELSE m.Message 
         END AS Message, 
-        DATE_FORMAT(m.CreationDate, '%Y-%m-%d %H:%i') AS CreationDate, c.isDataEncrypted AS isDataEncrypted
+        DATE_FORMAT(m.CreationDate, '%Y-%m-%d %H:%i') AS CreationDate, c.isDataEncrypted AS isDataEncrypted,
+        u.Status AS statusUser
         FROM Messages m
         INNER JOIN Chats c ON m.ChatId = c.Id
         INNER JOIN Users u ON m.UserId = u.Id

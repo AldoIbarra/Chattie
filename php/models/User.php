@@ -105,7 +105,7 @@ class User
         $sql = "CALL sp_gestion_Usuario(?,?,?,?,?,?)";
         $stmt = $mysqli->prepare($sql);
         $stmt->execute([$opcion, 0, "", $Email, $Password, ""]); */
-        $sql = "SELECT Id, UserName, Email, Password, DateBirth FROM Users WHERE Email = ? AND Password = ?";
+        $sql = "SELECT Id, UserName, Email, Password, DateBirth, Status FROM Users WHERE Email = ? AND Password = ?";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("ss", $Email, $Password);
         $stmt->execute();
@@ -120,7 +120,7 @@ class User
         $sql = "CALL sp_gestion_Usuario(?,?,?,?,?,?)";
         $stmt = $mysqli->prepare($sql);
         $stmt->execute([$opcion, $Id, "", "", "", ""]); */
-        $sql = "SELECT Id, UserName, Email, Password, DateBirth FROM Users WHERE Id = ? LIMIT 1";
+        $sql = "SELECT Id, UserName, Email, Password, DateBirth, Status FROM Users WHERE Id = ? LIMIT 1";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("i", $Id);
         $stmt->execute();
@@ -135,7 +135,7 @@ class User
         $stmt = $mysqli->prepare($sql);
         $stmt->execute([$Id]);*/
         $sql = "SELECT u.Id AS 'Id', u.UserName AS 'UserName', u.Email AS 'Email',
-        u.DateBirth AS 'DateBirth' FROM Users u WHERE u.Id != ?";
+        u.DateBirth AS 'DateBirth', u.Status AS 'Status' FROM Users u WHERE u.Id != ?";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("i", $Id);
         $stmt->execute();
@@ -143,8 +143,8 @@ class User
         $Contacts = [];
         while ($contact = $result->fetch_assoc()) {
             $Contacts[] = User::parseJson($contact);
-         }
- 
+        }
+
         return $Contacts;
     }
 
@@ -163,7 +163,8 @@ class User
         return $users;
     }
 
-    public static function saveStatus($mysqli, $status, $idUser){
+    public static function saveStatus($mysqli, $status, $idUser)
+    {
         $sql = "UPDATE Users 
         SET Status = ?
         WHERE Id = ?";
@@ -173,7 +174,8 @@ class User
     }
 
     // guardar la ultima fecha y hora online
-    public static function saveLastTimeOnline($mysqli, $idUser){ 
+    public static function saveLastTimeOnline($mysqli, $idUser)
+    {
         $sql = "UPDATE Users 
         SET LastTimeOnline = current_timestamp()
         WHERE Id = ?";
