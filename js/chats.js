@@ -1,6 +1,6 @@
 function showModal(messages) {
-    const modal = document.getElementById("myModal");
-    const modalContent = document.querySelector("#myModal .modal-content");
+    const modal = document.getElementById("encryptionModal");
+    const modalContent = document.querySelector("#encryptionModal .modal-content");
     const modalMessage = document.getElementById("modalMessage");
 
     // Construir mensajes
@@ -15,7 +15,7 @@ function showModal(messages) {
     // Mostrar modal
     modal.style.display = "block";
 
-    const closeBtn = document.querySelector("#myModal .close");
+    const closeBtn = document.querySelector("#encryptionModal .close");
     closeBtn.onclick = function() {
         modal.style.display = "none";
     }

@@ -22,6 +22,22 @@ body{
             flex-direction: row;
     
             div {
+                .custom-select {
+                    position: relative;
+                    color: white;
+                    background-color: transparent;
+                    line-height: inherit;
+                    content: "";
+                    right: 6px;
+                    border: 1px solid transparent;
+                    border-color: transparent transparent transparent;
+                    option {
+                        background-color: #393E46;
+                        color: #ffffff;
+                        border: 1px solid transparent;
+                    }
+                }
+
                 &:first-child {
                     display: flex;
                     flex-basis: auto;
@@ -37,7 +53,8 @@ body{
                 }
             }
     
-            &:first-child div:nth-child(2) button {
+            &:first-child div:nth-child(2) button,
+            &:nth-child(2) div:nth-child(2) button {
                 background-color: transparent;
                 border: none;
             }
@@ -88,6 +105,7 @@ body{
                     border: none;
                     border-bottom: 10px solid #222831;
                     width: 100%;
+                    color: white;
             
                     &:focus {
                     outline: 0;
@@ -109,12 +127,15 @@ body{
             max-height: 78vh;
             overflow: hidden;
             overflow-y: scroll;
-    
-            .messageContainer{
-                .YourMessage {
-                    background-color: #393E46;
+            scrollbar-color: #fafafa80 #fafafa00;
+            scrollbar-gutter: stable;
+            
+            .YourMessage {
+
+                div{
                     display: flex;
                     flex-direction: column;
+                    background-color: #393E46;
                     max-width: fit-content;
                     margin: 10px;
                     padding: 5px;
@@ -122,27 +143,63 @@ body{
                     span{
                         &:first-child{
                             text-align: left;
-                            font-size: 12px;
+                            font-size: 15px;
                         }
-                        &:nth-child(3){
+                        &:nth-child(2) {
                             text-align: end;
-                            font-size: 12px;
+                            font-size: 10px;
                         }
                     }
                 }
+                
+            }
         
-                .MyMessage {
-                    background-color: #00ADB5;
+            .MyMessage {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                div{
                     display: flex;
                     flex-direction: column;
+                    background-color: #00ADB5;
                     max-width: fit-content;
                     margin: 10px;
                     padding: 5px;
                     border-radius: 5px;
                     span{
+                        &:first-child{
+                            font-size: 15px;
+                        }
                         &:nth-child(2){
                             text-align: end;
+                            font-size: 10px;
+                        }
+                    }
+                }
+            }
+
+            .YourMessageGroup {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                div{
+                    display: flex;
+                    flex-direction: column;
+                    background-color: #393E46;
+                    max-width: fit-content;
+                    margin: 10px;
+                    padding: 5px;
+                    border-radius: 5px;
+                    span{
+                        &:first-child {
                             font-size: 12px;
+                        }
+                        &:nth-child(2) {
+                            font-size: 15px;
+                        }
+                        &:nth-child(3) {
+                            text-align: end;
+                            font-size: 10px;
                         }
                     }
                 }
@@ -183,6 +240,12 @@ body{
         }
     
         .modal-footer {
+            background-color: #222831;
+        }
+    }
+
+    #encryptionModal{
+        .modal-header,.modal-body{
             background-color: #222831;
         }
     }

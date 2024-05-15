@@ -22,6 +22,21 @@ body .header-chat div {
   display: flex;
   flex-direction: row;
 }
+body .header-chat div div .custom-select {
+  position: relative;
+  color: white;
+  background-color: transparent;
+  line-height: inherit;
+  content: "";
+  right: 6px;
+  border: 1px solid transparent;
+  border-color: transparent transparent transparent;
+}
+body .header-chat div div .custom-select option {
+  background-color: #393E46;
+  color: #ffffff;
+  border: 1px solid transparent;
+}
 body .header-chat div div:first-child {
   display: flex;
   flex-basis: auto;
@@ -34,8 +49,7 @@ body .header-chat div div:nth-child(2) img {
   max-width: 40px;
   margin-left: 15px;
 }
-body .header-chat div:first-child div:nth-child(2) button, 
-body .header-chat div:nth-child(2) div:nth-child(2) button{
+body .header-chat div:first-child div:nth-child(2) button, body .header-chat div:nth-child(2) div:nth-child(2) button {
   background-color: transparent;
   border: none;
 }
@@ -81,6 +95,7 @@ body .messages .footer-container footer input {
   border: none;
   border-bottom: 10px solid #222831;
   width: 100%;
+  color: white;
 }
 body .messages .footer-container footer input:focus {
   outline: 0;
@@ -93,49 +108,70 @@ body .messages .chat-messages {
   max-height: 78vh;
   overflow: hidden;
   overflow-y: scroll;
+  scrollbar-color: #fafafa80 #fafafa00;
+  scrollbar-gutter: stable;
 }
-body .messages .chat-messages .messageContainer .YourMessage {
-  background-color: #393E46;
+body .messages .chat-messages .YourMessage div {
   display: flex;
   flex-direction: column;
+  background-color: #393E46;
   max-width: fit-content;
   margin: 10px;
   padding: 5px;
   border-radius: 5px;
 }
-body .messages .chat-messages .messageContainer .YourMessage span:nth-child(2) {
-  text-align: end;
-  font-size: 12px;
-}
-body .messages .chat-messages .messageContainer .YourMessageGroup {
-  background-color: #393E46;
-  display: flex;
-  flex-direction: column;
-  max-width: fit-content;
-  margin: 10px;
-  padding: 5px;
-  border-radius: 5px;
-}
-body .messages .chat-messages .messageContainer .YourMessageGroup span:first-child {
+body .messages .chat-messages .YourMessage div span:first-child {
   text-align: left;
-  font-size: 12px;
+  font-size: 15px;
 }
-body .messages .chat-messages .messageContainer .YourMessageGroup span:nth-child(3) {
+body .messages .chat-messages .YourMessage div span:nth-child(2) {
   text-align: end;
-  font-size: 12px;
+  font-size: 10px;
 }
-body .messages .chat-messages .messageContainer .MyMessage {
-  background-color: #00ADB5;
+body .messages .chat-messages .MyMessage {
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
+}
+body .messages .chat-messages .MyMessage div {
+  display: flex;
+  flex-direction: column;
+  background-color: #00ADB5;
   max-width: fit-content;
   margin: 10px;
   padding: 5px;
   border-radius: 5px;
 }
-body .messages .chat-messages .messageContainer .MyMessage span:nth-child(2) {
+body .messages .chat-messages .MyMessage div span:first-child {
+  font-size: 15px;
+}
+body .messages .chat-messages .MyMessage div span:nth-child(2) {
   text-align: end;
+  font-size: 10px;
+}
+body .messages .chat-messages .YourMessageGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+body .messages .chat-messages .YourMessageGroup div {
+  display: flex;
+  flex-direction: column;
+  background-color: #393E46;
+  max-width: fit-content;
+  margin: 10px;
+  padding: 5px;
+  border-radius: 5px;
+}
+body .messages .chat-messages .YourMessageGroup div span:first-child {
   font-size: 12px;
+}
+body .messages .chat-messages .YourMessageGroup div span:nth-child(2) {
+  font-size: 15px;
+}
+body .messages .chat-messages .YourMessageGroup div span:nth-child(3) {
+  text-align: end;
+  font-size: 10px;
 }
 body #ContactsModal .Contacts {
   background-color: #393E46;
@@ -167,23 +203,8 @@ body #ContactsModal .modal-header {
 body #ContactsModal .modal-footer {
   background-color: #222831;
 }
-body #myModal .modal-header,
-body #myModal .modal-body{
+body #encryptionModal .modal-header, body #encryptionModal .modal-body {
   background-color: #222831;
 }
-.custom-select {
-  position: relative;
-  color: white;
-  background-color: transparent;
-  line-height: inherit;
-  content: "";
-  right: 6px;
-  border: 1px solid transparent;
-  border-color: transparent transparent transparent;
-}
-select option {
-  background-color: #393E46;
-  color: #ffffff;
-  border: 1px solid transparent;
-}
+
 /*# sourceMappingURL=chats.css.map */

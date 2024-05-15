@@ -48,7 +48,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 <body>
 	<div class="container">
 		<!-- Modal -->
-		<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel"
+		<div class="modal" id="encryptionModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel"
 			aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
@@ -269,9 +269,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 								var messageClass = (row.UserId ===
 									'<?php echo $user->getUserName(); ?>'
 								) ? "MyMessage" : (chatIsGroup === "1" ? "YourMessageGroup" : "YourMessage");
-								var messageHTML = '<div class="messageContainer"><div class="' +
-									messageClass +
-									'">';
+								messageHTML = '<div class="' + messageClass + '"><div>';
 								if (messageClass === "YourMessageGroup") {
 									messageHTML += '<span>' + row.UserId + '</span>';
 								}
