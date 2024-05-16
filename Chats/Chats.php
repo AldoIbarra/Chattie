@@ -47,22 +47,6 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 
 <body>
 	<div class="container">
-		<!-- Modal -->
-		<div class="modal" id="encryptionModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel"
-			aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="customModalLabel">Aviso</h5>
-						<button type="button" class="btn-close btn-close-white close" data-bs-dismiss="modal"></button>
-						</button>
-					</div>
-					<div class="modal-body">
-						<p id="modalMessage"></p>
-					</div>
-				</div>
-			</div>
-		</div>
 		<div class="row header-chat">
 			<div class="col-4">
 				<div>
@@ -79,21 +63,25 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 						</option>
 					</select>
 				</div>
-				<div>
-				<button onclick="closeSesion()"><img src="Close_square_fill.svg" alt=""></button>	
-				<a href=""><img src="AddIcon.svg" alt=""></a>
-					<button onclick="showContacts()"><img src="MessageIcon.svg" alt=""></button>
-					<a href=""><img src="UserIcon.svg" alt=""></a>
+				<div class="user-options">
+					<button onclick='closeSesion()'><img src='Close_square_fill.svg' alt=''></button>	
+					<a href=''><img src='AddIcon.svg' alt=''></a>
+					<button onclick='showContacts()'><img src='MessageIcon.svg' alt=''></button>
+					<a href=''><img src='UserIcon.svg' alt=''></a>
 				</div>
 			</div>
-			<div class="col-8">
+			<div class="col-8 chat-info">
 				<div>
 					<span id="chat_selected">Bienvenido</span>
 					<span id="user_status"> </span>
 				</div>
 				<div>
-					<button onclick="encryptData()"><img id="isDataEncrypted" src=" Unlock_fill.svg" alt=""></button>
-					<a href=""><img src="VideoIcon.svg" alt=""></a>
+					<button onclick="encryptData()">
+						<img id="isDataEncrypted" src="Unlock_fill.svg" alt="">
+					</button>
+					<button onclick="startVideocall();">
+						<img src="VideoIcon.svg" alt="">
+					</button>
 				</div>
 			</div>
 		</div>
@@ -108,7 +96,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
                         }
                     }
 
-?>
+				?>
 			</div>
 			<div class="col-8 messages">
 				<div class="chat-messages" id="chat-messages">
@@ -150,14 +138,14 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 				<!-- Modal body -->
 				<div class="Contacts">
 					<?php // se muestran los contactos
-        if(count($contacts) < 1) {
-            echo '<span style="display: flex; justify-content: center;">No hay nungún contacto disponible</span>';
-        } else {
-            foreach ($contacts as $contact) {
-                echo '<button onClick="testModal('.$idUser.',\''.$contact->getID().'\')" class="Contact inter">'.$contact->getUsername().' </button>';
-            }
-        }
-?>
+						if(count($contacts) < 1) {
+							echo '<span style="display: flex; justify-content: center;">No hay nungún contacto disponible</span>';
+						} else {
+							foreach ($contacts as $contact) {
+								echo '<button onClick="testModal('.$idUser.',\''.$contact->getID().'\')" class="Contact inter">'.$contact->getUsername().' </button>';
+							}
+						}
+					?>
 				</div>
 
 				<!-- Modal footer -->
@@ -165,6 +153,39 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
 				</div>
 
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal" id="encryptionModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="customModalLabel">Aviso</h5>
+					<button type="button" class="btn-close btn-close-white close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">
+					<p id="modalMessage"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal" id="videocallModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="customModalLabel">Videollamada</h5>
+				</div>
+				<div class="modal-body">
+					<video class="video-player" id="user-1" autoplay playsinline></video>
+					<video class="video-player" id="user-2" autoplay playsinline></video>
+					<div class="videocall-options">
+						<button><img src="cam.svg" alt=""></button>
+						<button><img src="mic.svg" alt=""></button>
+						<button><img src="hung.svg" alt=""></button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -459,6 +480,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 	</script>
 	<script src="../js/chats.js"></script>
+	<script src='Videocall.js'></script>
 </body>
 
 </html>
