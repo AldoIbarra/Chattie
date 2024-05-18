@@ -147,4 +147,44 @@ class Chat
         $chat = $result->fetch_assoc();
         return $chat ? Chat::parseJson($chat) : null;
     }
+
+    public static function getChatById($mysqli, $chatId)
+    {
+        $sql = "SELECT
+        c.Id AS 'Id',
+        c.Name AS 'Name',
+        c.AdminId AS 'AdminId',
+        c.IsGroup AS 'IsGroup'
+        FROM Chats c
+        WHERE c.Id = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("i", $chatId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $chat = $result->fetch_assoc();
+        return $chat ? Chat::parseJson($chat) : null;
+    }
+
+    public function createPrivateChat($mysqli, $actualUserId, $contactId){
+        $sql = "INSERT INTO Chats
+            (Name, AdminId, CreationDate, UpdatedDate, IsGroup, isDataEncrypted)
+            VALUES
+            (NULL, NULL, now(), now(), 0, 0)";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->execute();
+        $this->Id = (int)$stmt->insert_id;
+        $this->relateUserToChat($mysqli, $actualUserId, $this->Id);
+        $this->relateUserToChat($mysqli, $contactId, $this->Id);
+    }
+
+    public function relateUserToChat($mysqli, $userId, $chatId){
+        $sql = "INSERT INTO UserChats
+            (ChatId, UserId)
+            VALUES
+            (?, ?)";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("ii", $chatId, $userId);
+        $stmt->execute();
+    }
+
 }

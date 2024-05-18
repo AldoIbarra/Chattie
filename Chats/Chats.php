@@ -236,7 +236,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 		function testModal(actualUserId, contactId) {
 			checkIfChatExists(actualUserId, contactId);
 		}
-
+		//ChatId, chatName, status, IsGroup?
 		function setChatReady(chatIndex, chatName, status, indexisGroup) {
 			chatId = chatIndex;
 			chatIsGroup = indexisGroup;
@@ -337,6 +337,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 					},
 					dateType: "text",
 					success: function(data) {
+						console.log(data);
 						$("#messageText").val("");
 
 						$('#chat-messages').animate({
@@ -358,11 +359,13 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 				success: function(data) {
 					try {
 						var chat = data;
+						console.log(chat);
 						if (chat != null) {
 							$('#ContactsModal').modal("hide");
 							setChatReady(chat.Id, chat.Name, 0);
 						} else {
 							console.log('se tiene que crear un chat');
+							createPrivateChat(actualUserId, contactId);
 						}
 					} catch (error) {
 						console.error("Error al analizar JSON:", error);
@@ -473,6 +476,23 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 					console.log("Error al cerrar sesión");
 				},
 			});
+		}
+
+		function createPrivateChat(actualUserId, contactId) {
+			event.preventDefault();
+			$.ajax({
+				url: "../php/controllers/createPrivateChat.php",
+				method: "POST",
+				data: {
+					actualUserId: actualUserId,
+					contactId: contactId
+				},
+				dateType: "text",
+				success: function(data) {
+					console.log(data);
+					console.log("Se creó el chat");
+				}
+			})
 		}
 	</script>
 
