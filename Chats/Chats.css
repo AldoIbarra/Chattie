@@ -13,16 +13,16 @@ body {
   color: white;
   background-color: red;
 }
-body .header-chat {
+body .header-chat-section {
   background-color: #393E46;
 }
-body .header-chat div {
+body .header-chat-section .header-chat div {
   padding: 7px;
   position: relative;
   display: flex;
   flex-direction: row;
 }
-body .header-chat div div .custom-select {
+body .header-chat-section .header-chat div div .custom-select {
   position: relative;
   color: white;
   background-color: transparent;
@@ -32,15 +32,15 @@ body .header-chat div div .custom-select {
   border: 1px solid transparent;
   border-color: transparent transparent transparent;
 }
-body .header-chat div div .custom-select option {
+body .header-chat-section .header-chat div div .custom-select option {
   background-color: #393E46;
   color: #ffffff;
   border: 1px solid transparent;
 }
-body .header-chat div div .custom-select:focus {
+body .header-chat-section .header-chat div div .custom-select:focus {
   outline: none;
 }
-body .header-chat div div:first-child {
+body .header-chat-section .header-chat div div:first-child {
   display: flex;
   flex-basis: auto;
   flex-direction: column;
@@ -48,46 +48,48 @@ body .header-chat div div:first-child {
   justify-content: center;
   min-width: 0;
 }
-body .header-chat div .user-options {
+body .header-chat-section .header-chat div .user-options {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
 }
-body .header-chat div .user-options img {
+body .header-chat-section .header-chat div .user-options img {
   max-width: 40px;
   margin-left: 15px;
 }
-body .header-chat div:first-child div:nth-child(2) button, body .header-chat div:nth-child(2) div:nth-child(2) button {
+body .header-chat-section .header-chat div:first-child div:nth-child(2) button, body .header-chat-section .header-chat div:nth-child(2) div:nth-child(2) button {
   background-color: transparent;
   border: none;
 }
-body .header-chat .chat-info div:nth-child(2) {
+body .header-chat-section .header-chat .chat-info div:nth-child(2) {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
 }
-body .header-chat .chat-info div:nth-child(2) button:first-child {
+body .header-chat-section .header-chat .chat-info div:nth-child(2) button:first-child {
   padding-bottom: 8px;
 }
-body .header-chat .chat-info div:nth-child(2) button img {
+body .header-chat-section .header-chat .chat-info div:nth-child(2) button img {
   width: 70%;
 }
-body .container-chats {
+body .container-chats-section {
+  background-color: #222831;
+}
+body .container-chats-section .container-chats {
   height: 88vh;
 }
-body .container-chats .chat-list {
-  background-color: #222831;
+body .container-chats-section .container-chats .chat-list {
   padding-top: 15px;
 }
-body .container-chats .chat-list div {
+body .container-chats-section .container-chats .chat-list div {
   background-color: #393E46;
 }
-body .container-chats .chat-list div:hover {
+body .container-chats-section .container-chats .chat-list div:hover {
   background-color: #5E636A;
 }
-body .container-chats .chat-list .chat {
+body .container-chats-section .container-chats .chat-list .chat {
   height: 62px;
   display: flex;
   flex-basis: auto;
@@ -98,33 +100,33 @@ body .container-chats .chat-list .chat {
   margin-bottom: 15px;
   padding-left: 15px;
 }
-body .messages {
+body .container-chats-section .container-chats .messages {
   background-image: url("Back-Chat.svg");
   background-repeat: repeat;
 }
-body .messages .footer-container footer {
+body .container-chats-section .container-chats .messages .footer-container footer {
   background-color: black;
   position: absolute;
   bottom: 1vh;
   max-width: 55%;
 }
-body .messages .footer-container footer img {
+body .container-chats-section .container-chats .messages .footer-container footer img {
   max-width: 35px;
 }
-body .messages .footer-container footer input {
+body .container-chats-section .container-chats .messages .footer-container footer input {
   background-color: #393E46;
   border: none;
   border-bottom: 10px solid #222831;
   width: 100%;
   color: white;
 }
-body .messages .footer-container footer input:focus {
+body .container-chats-section .container-chats .messages .footer-container footer input:focus {
   outline: 0;
 }
-body .messages .footer-container footer div div div {
+body .container-chats-section .container-chats .messages .footer-container footer div div div {
   padding: 5px;
 }
-body .messages .chat-messages {
+body .container-chats-section .container-chats .messages .chat-messages {
   position: relative;
   max-height: 78vh;
   overflow: hidden;
@@ -132,7 +134,7 @@ body .messages .chat-messages {
   scrollbar-color: #fafafa80 #fafafa00;
   scrollbar-gutter: stable;
 }
-body .messages .chat-messages .YourMessage div {
+body .container-chats-section .container-chats .messages .chat-messages .YourMessage div {
   display: flex;
   flex-direction: column;
   background-color: #393E46;
@@ -141,20 +143,20 @@ body .messages .chat-messages .YourMessage div {
   padding: 5px;
   border-radius: 5px;
 }
-body .messages .chat-messages .YourMessage div span:first-child {
+body .container-chats-section .container-chats .messages .chat-messages .YourMessage div span:first-child {
   text-align: left;
   font-size: 15px;
 }
-body .messages .chat-messages .YourMessage div span:nth-child(2) {
+body .container-chats-section .container-chats .messages .chat-messages .YourMessage div span:nth-child(2) {
   text-align: end;
   font-size: 10px;
 }
-body .messages .chat-messages .MyMessage {
+body .container-chats-section .container-chats .messages .chat-messages .MyMessage {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
-body .messages .chat-messages .MyMessage div {
+body .container-chats-section .container-chats .messages .chat-messages .MyMessage div {
   display: flex;
   flex-direction: column;
   background-color: #00ADB5;
@@ -163,19 +165,19 @@ body .messages .chat-messages .MyMessage div {
   padding: 5px;
   border-radius: 5px;
 }
-body .messages .chat-messages .MyMessage div span:first-child {
+body .container-chats-section .container-chats .messages .chat-messages .MyMessage div span:first-child {
   font-size: 15px;
 }
-body .messages .chat-messages .MyMessage div span:nth-child(2) {
+body .container-chats-section .container-chats .messages .chat-messages .MyMessage div span:nth-child(2) {
   text-align: end;
   font-size: 10px;
 }
-body .messages .chat-messages .YourMessageGroup {
+body .container-chats-section .container-chats .messages .chat-messages .YourMessageGroup {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
-body .messages .chat-messages .YourMessageGroup div {
+body .container-chats-section .container-chats .messages .chat-messages .YourMessageGroup div {
   display: flex;
   flex-direction: column;
   background-color: #393E46;
@@ -184,13 +186,13 @@ body .messages .chat-messages .YourMessageGroup div {
   padding: 5px;
   border-radius: 5px;
 }
-body .messages .chat-messages .YourMessageGroup div span:first-child {
+body .container-chats-section .container-chats .messages .chat-messages .YourMessageGroup div span:first-child {
   font-size: 12px;
 }
-body .messages .chat-messages .YourMessageGroup div span:nth-child(2) {
+body .container-chats-section .container-chats .messages .chat-messages .YourMessageGroup div span:nth-child(2) {
   font-size: 15px;
 }
-body .messages .chat-messages .YourMessageGroup div span:nth-child(3) {
+body .container-chats-section .container-chats .messages .chat-messages .YourMessageGroup div span:nth-child(3) {
   text-align: end;
   font-size: 10px;
 }
@@ -239,10 +241,10 @@ body #videocallModal .modal-body {
   align-items: flex-start;
   justify-content: space-between;
 }
-body #videocallModal .modal-body #user-1 {
+body #videocallModal .modal-body #localVideo {
   width: 29%;
 }
-body #videocallModal .modal-body #user-2 {
+body #videocallModal .modal-body #remoteVideo {
   width: 70%;
 }
 body #videocallModal .modal-body .videocall-options {
@@ -258,6 +260,9 @@ body #videocallModal .modal-body .videocall-options button {
   margin: 0px 15px;
   width: 60px;
   height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 body #videocallModal .modal-body .videocall-options button img {
   width: 85%;

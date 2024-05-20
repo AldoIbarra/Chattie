@@ -46,84 +46,90 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 </head>
 
 <body>
-	<div class="container">
-		<div class="row header-chat">
-			<div class="col-4">
-				<div>
-					<span><?php echo $user->getUsername(); ?></span>
-					<!-- <span>En línea</span> -->
-					<select class="custom-select" id="statusSelect" onchange="saveStatusUser()">
-						<option value="1" <?php if ($user->getStatus() == 1) {
-						    echo "selected";
-						} ?>
-							>En línea</option>
-						<option value="0" <?php if ($user->getStatus() == "0") {
-						    echo "selected";
-						} ?>>No disponible
-						</option>
-					</select>
+	<section class="header-chat-section">
+		<div class="container">
+			<div class="row header-chat">
+				<div class="col-4">
+					<div>
+						<span><?php echo $user->getUsername(); ?></span>
+						<!-- <span>En línea</span> -->
+						<select class="custom-select" id="statusSelect" onchange="saveStatusUser()">
+							<option value="1" <?php if ($user->getStatus() == 1) {
+								echo "selected";
+							} ?>
+								>En línea</option>
+							<option value="0" <?php if ($user->getStatus() == "0") {
+								echo "selected";
+							} ?>>No disponible
+							</option>
+						</select>
+					</div>
+					<div class="user-options">
+						<button onclick='closeSesion()'><img src='Close_square_fill.svg' alt=''></button>	
+						<a href=''><img src='AddIcon.svg' alt=''></a>
+						<button onclick='showContacts()'><img src='MessageIcon.svg' alt=''></button>
+						<a href=''><img src='UserIcon.svg' alt=''></a>
+					</div>
 				</div>
-				<div class="user-options">
-					<button onclick='closeSesion()'><img src='Close_square_fill.svg' alt=''></button>	
-					<a href=''><img src='AddIcon.svg' alt=''></a>
-					<button onclick='showContacts()'><img src='MessageIcon.svg' alt=''></button>
-					<a href=''><img src='UserIcon.svg' alt=''></a>
-				</div>
-			</div>
-			<div class="col-8 chat-info">
-				<div>
-					<span id="chat_selected">Bienvenido</span>
-					<span id="user_status"> </span>
-				</div>
-				<div>
-					<button onclick="encryptData()">
-						<img id="isDataEncrypted" src="Unlock_fill.svg" alt="">
-					</button>
-					<button onclick="startVideocall();">
-						<img src="VideoIcon.svg" alt="">
-					</button>
+				<div class="col-8 chat-info">
+					<div>
+						<span id="chat_selected">Bienvenido</span>
+						<span id="user_status"> </span>
+					</div>
+					<div>
+						<button onclick="encryptData()">
+							<img id="isDataEncrypted" src="Unlock_fill.svg" alt="">
+						</button>
+						<button onclick="startVideocall();">
+							<img src="VideoIcon.svg" alt="">
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="row container-chats">
-			<div class="col-4 chat-list">
-				<?php // se muestran los chats
-                    if(count($chats) < 1) {
-                        echo '<span style="display: flex; justify-content: center;">Aún no existen chats</span>';
-                    } else {
-                        foreach ($chats as $chat) {
-                            echo '<div class="chat" id="chat'.$chat->getID().'" data-index="'.$chat->getID().'" data-group="'.$chat->getIsGroup().'" data-status="'.$chat->getStatusUser().'"   >'.$chat->getName().'</div>';
-                        }
-                    }
+	</section>
+	<section class="container-chats-section">
+		<div class="container">
+			<div class="row container-chats">
+				<div class="col-4 chat-list">
+					<?php // se muestran los chats
+						if(count($chats) < 1) {
+							echo '<span style="display: flex; justify-content: center;">Aún no existen chats</span>';
+						} else {
+							foreach ($chats as $chat) {
+								echo '<div class="chat" id="chat'.$chat->getID().'" data-index="'.$chat->getID().'" data-group="'.$chat->getIsGroup().'" data-status="'.$chat->getStatusUser().'"   >'.$chat->getName().'</div>';
+							}
+						}
 
-				?>
-			</div>
-			<div class="col-8 messages">
-				<div class="chat-messages" id="chat-messages">
-
+					?>
 				</div>
-				<div class="footer-container">
-					<footer class="container">
-						<div class="row">
-							<div class="col-12">
-								<div class="row">
-									<div class="col-1">
-										<a href=""><img src="Export.svg" alt=""></a>
-									</div>
-									<div class="col-10">
-										<input type="text" id="messageText">
-									</div>
-									<div class="col-1">
-										<a href="" id="sendMessage"><img src="Send.svg" alt=""></a>
+				<div class="col-8 messages">
+					<div class="chat-messages" id="chat-messages">
+
+					</div>
+					<div class="footer-container">
+						<footer class="container">
+							<div class="row">
+								<div class="col-12">
+									<div class="row">
+										<div class="col-1">
+											<a href=""><img src="Export.svg" alt=""></a>
+										</div>
+										<div class="col-10">
+											<input type="text" id="messageText">
+										</div>
+										<div class="col-1">
+											<a href="" id="sendMessage"><img src="Send.svg" alt=""></a>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					</footer>
+						</footer>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</section>
 
 	<div class="modal" id="ContactsModal">
 		<div class="modal-dialog">
@@ -178,12 +184,12 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 					<h5 class="modal-title" id="customModalLabel">Videollamada</h5>
 				</div>
 				<div class="modal-body">
-					<video class="video-player" id="user-1" autoplay playsinline></video>
-					<video class="video-player" id="user-2" autoplay playsinline></video>
+					<video id="localVideo" autoplay muted></video>
+  					<video id="remoteVideo" autoplay></video>
 					<div class="videocall-options">
-						<button><img src="cam.svg" alt=""></button>
-						<button><img src="mic.svg" alt=""></button>
-						<button><img src="hung.svg" alt=""></button>
+						<button onclick="toggleCamera()">
+							<img src="phone.svg" alt="">
+						</button>
 					</div>
 				</div>
 			</div>
@@ -498,6 +504,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+	<script src="https://mesquite-malachite-pirate.glitch.me/socket.io/socket.io.js"></script>
 	</script>
 	<script src="../js/chats.js"></script>
 	<script src='Videocall.js'></script>
