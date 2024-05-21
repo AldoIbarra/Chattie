@@ -65,9 +65,8 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 						</select>
 					</div>
 					<div class="user-options">
-						<button onclick='closeSesion()'><img src='Close_square_fill.svg' alt=''></button>	
-						<a href=''><img src='AddIcon.svg' alt=''></a>
-						<button onclick='showContacts()'><img src='MessageIcon.svg' alt=''></button>
+						<button onclick='closeSesion()'><img src='Close_square_fill.svg' alt=''></button>
+						<button onclick='showContacts()'><img src='AddIcon.svg' alt=''></button>
 						<a href=''><img src='UserIcon.svg' alt=''></a>
 					</div>
 				</div>
@@ -76,11 +75,14 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 						<span id="chat_selected">Bienvenido</span>
 						<span id="user_status"> </span>
 					</div>
-					<div>
+					<div class="chat-options">
+						<button onclick="newEmail()">
+							<img src='MessageIcon.svg' alt=''>
+						</button>
 						<button onclick="encryptData()">
 							<img id="isDataEncrypted" src="Unlock_fill.svg" alt="">
 						</button>
-						<button onclick="startVideocall();">
+						<button onclick="startVideocall(); callOtherUser();">
 							<img src="VideoIcon.svg" alt="">
 						</button>
 					</div>
@@ -105,7 +107,10 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 				</div>
 				<div class="col-8 messages">
 					<div class="chat-messages" id="chat-messages">
-
+						<div class="initial-Display">
+							<img src="../Chattie-front.png" alt="">
+							<img src="../videocall.gif" alt="">
+						</div>
 					</div>
 					<div class="footer-container">
 						<footer class="container">
@@ -113,9 +118,16 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 								<div class="col-12">
 									<div class="row">
 										<div class="col-1">
-											<a href=""><img src="Export.svg" alt=""></a>
+											<button>
+												<img src="Export.svg" alt="">
+											</button>
 										</div>
-										<div class="col-10">
+										<div class="col-1">
+											<button id="location" onclick="sendLocation();">
+												<img src="location.svg" alt="">
+											</button>
+										</div>
+										<div class="col-9">
 											<input type="text" id="messageText">
 										</div>
 										<div class="col-1">
@@ -182,15 +194,30 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="customModalLabel">Videollamada</h5>
+					<button type="button" class="btn-close btn-close-black close" onclick="finishVideocall()"></button>
 				</div>
 				<div class="modal-body">
 					<video id="localVideo" autoplay muted></video>
   					<video id="remoteVideo" autoplay></video>
 					<div class="videocall-options">
-						<button onclick="toggleCamera()">
+						<button onclick="finishVideocall()">
 							<img src="phone.svg" alt="">
 						</button>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="EmailModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="email-header">
+					<h4 class="modal-title">Nuevo Correo electronico</h4>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="email-form">
+					
 				</div>
 			</div>
 		</div>
@@ -200,14 +227,23 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 	<script>
+		if(document.getElementById('chat_selected').textContent == 'Bienvenido'){
+			$(".chat-options").hide();
+			$(".footer-container").hide();
+    	}
+
+
 		var statusSelect = document.getElementById("statusSelect");
 
-
+		var currentChat;
 		var chatId = "0";
 		var chatIsGroup = "0";
 		// Seleccionar chat
 		document.querySelectorAll('.chat').forEach(function(element) {
 			element.addEventListener('click', function() {
+				$(".footer-container").show();
+				$(".chat-options").show();
+				currentChat = this.getAttribute('data-index');
 
 				setChatReady(this.getAttribute('data-index'), this.textContent.trim(), this.getAttribute(
 					'data-status'), this.getAttribute('data-group'));
@@ -216,10 +252,30 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 			});
 		});
 
+		function callOtherUser(){
+			console.log('currentChat');
+			console.log(currentChat);
+
+			// event.preventDefault();
+			// $.ajax({
+			// 	url: "../php/controllers/callUser.php",
+			// 	method: "POST",
+			// 	data: {
+			// 		fromUser: <?php echo $idUser; ?> ,
+			// 		fromChat: currentChat
+			// 	},
+			// 	dateType: "text",
+			// 	success: function(data) {
+			// 		console.log('Comenzó la llamada');
+			// 	}
+			// })
+		}
+
 		// Mandar mensaje
 		var sendMessage = document.getElementById("sendMessage");
 		sendMessage.addEventListener("click", function(event) {
 			sendMsg();
+			$('#messageText').val('');
 		})
 
 
@@ -293,27 +349,30 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 						if (infoChat.messages.length > 0) {
 							changeIconEncrypt(infoChat.messages[0].isDataEncrypted);
 							infoChat.messages.forEach(function(row) {
-								var messageClass = (row.UserId ===
+								if(row.Type == 1){
+									var messageClass = (row.UserId ===
 									'<?php echo $user->getUserName(); ?>'
-								) ? "MyMessage" : (chatIsGroup === "1" ? "YourMessageGroup" : "YourMessage");
-								messageHTML = '<div class="' + messageClass + '"><div>';
-								if (messageClass === "YourMessageGroup") {
-									messageHTML += '<span>' + row.UserId + '</span>';
-								}
-								else if (messageClass === "YourMessage"){
-									changeStatusUser(row.statusUser);
-								}
-								messageHTML += '<span>' + row.Message + '</span>';
-								messageHTML += '<span>' + row.CreationDate +
-									'</span>';
-								messageHTML += '</div></div>';
+									) ? "MyMessage" : (chatIsGroup === "1" ? "YourMessageGroup" : "YourMessage");
+									messageHTML = '<div class="' + messageClass + '"><div>';
+									if (messageClass === "YourMessageGroup") {
+										messageHTML += '<span>' + row.UserId + '</span>';
+									}
+									else if (messageClass === "YourMessage"){
+										changeStatusUser(row.statusUser);
+									}
+									messageHTML += '<span>' + row.Message + '</span>';
+									messageHTML += '<span>' + row.CreationDate +
+										'</span>';
+									messageHTML += '</div></div>';
 
-								$('#chat-messages').append(messageHTML);
+									$('#chat-messages').append(messageHTML);
 
-								if (!onInterval) {
-									$('.chat-messages').scrollTop($('.chat-messages')[0]
-										.scrollHeight);
+									if (!onInterval) {
+										$('.chat-messages').scrollTop($('.chat-messages')[0]
+											.scrollHeight);
+									}
 								}
+								
 							});
 						} else {
 							var noMessages = '<span>No hay mensajes disponibles</span>';
@@ -330,6 +389,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 		}
 
 		function sendMsg() {
+			//Esta funcion solo envía mensajes de texto ya que el "tipo" que utiliza es 1
 			event.preventDefault();
 			if ($("#messageText").val() != "") {
 
@@ -339,10 +399,12 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 					data: {
 						fromUser: <?php echo $idUser; ?> ,
 						fromChat: chatId,
-						message: $("#messageText").val()
+						message: $("#messageText").val(),
+						Type: 1
 					},
 					dateType: "text",
 					success: function(data) {
+						console.log('mensaje enviado exitosamente');
 						console.log(data);
 						$("#messageText").val("");
 
@@ -352,6 +414,36 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 					}
 				})
 			}
+		}
+
+		function sendLocation() {
+			//Esta funcion solo envía ubicación ya que el "tipo" que utiliza es 2
+			var coords = getCoords();
+			console.log(coords);
+			event.preventDefault();
+			// if ($("#messageText").val() != "") {
+
+			// 	$.ajax({
+			// 		url: "../php/controllers/insertMessage.php",
+			// 		method: "POST",
+			// 		data: {
+			// 			fromUser: <?php echo $idUser; ?> ,
+			// 			fromChat: chatId,
+			// 			message: $("#messageText").val(),
+			// 			Type: 1
+			// 		},
+			// 		dateType: "text",
+			// 		success: function(data) {
+			// 			console.log('mensaje enviado exitosamente');
+			// 			console.log(data);
+			// 			$("#messageText").val("");
+
+			// 			$('#chat-messages').animate({
+			// 				scrollTop: $('#chat-messages').prop("scrollHeight")
+			// 			}, "slow");
+			// 		}
+			// 	})
+			// }
 		}
 
 		function checkIfChatExists(actualUserId, contactId) {
@@ -500,14 +592,21 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 				}
 			})
 		}
+
+		function newEmail(){
+			console.log('new email');
+			console.log('currentChat');
+			console.log(currentChat);
+			$('#EmailModal').modal("show");;
+		}
 	</script>
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"> </script>
 	<script src="https://mesquite-malachite-pirate.glitch.me/socket.io/socket.io.js"></script>
-	</script>
+	<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMKezTeAW43Iu6jRKx9dG5ooUDi3ZS7uY"></script>
 	<script src="../js/chats.js"></script>
 	<script src='Videocall.js'></script>
+	<script src="maps.js"></script>
 </body>
 
 </html>

@@ -9,6 +9,7 @@ class Message
     private $CreationDate;
     private $isDataEncrypted;
     private $statusUser;
+    private $Type;
 
     public function getID()
     {
@@ -70,6 +71,16 @@ class Message
         $this->isDataEncrypted = $isDataEncrypted;
     }
 
+    public function getType()
+    {
+        return $this->Type;
+    }
+
+    public function setType($Type)
+    {
+        $this->Type = $Type;
+    }
+
     public function getisstatusUser()
     {
         return $this->isstatusUser;
@@ -80,7 +91,7 @@ class Message
         $this->isstatusUser = $isstatusUser;
     }
 
-    public function __construct($ChatId, $UserId, $Message, $CreationDate, $isDataEncrypted, $statusUser)
+    public function __construct($ChatId, $UserId, $Message, $CreationDate, $isDataEncrypted, $isstatusUser, $Type)
     {
         $this->ChatId = $ChatId;
         $this->UserId = $UserId;
@@ -88,6 +99,7 @@ class Message
         $this->CreationDate = $CreationDate;
         $this->isDataEncrypted = $isDataEncrypted;
         $this->isstatusUser = $isstatusUser;
+        $this->Type = $Type;
     }
 
     public static function parseJson($json)
@@ -99,6 +111,7 @@ class Message
             isset($json['CreationDate']) ? $json['CreationDate'] : '',
             isset($json['isDataEncrypted']) ? $json['isDataEncrypted'] : '',
             isset($json['isstatusUser']) ? $json['isstatusUser'] : '',
+            isset($json['Type']) ? $json['Type'] : '',
         );
         if (isset($json['Id'])) {
             $Message->setID((int) $json['Id']);
@@ -107,17 +120,17 @@ class Message
         return $Message;
     }
 
-    public function save($mysqli, $ChatId, $UserId, $Message)
+    public function save($mysqli, $ChatId, $UserId, $Message, $Type)
     {
         /*$opcion = 'insertar';
         $sql = 'CALL sp_gestion_mensajes(?,?,?,?,?,?)';
         $stmt = $mysqli->prepare($sql);
         $stmt->execute([$opcion, 0, $ChatId, $UserId, $Message, ""]);*/
         $sql = "INSERT INTO Messages(
-            ChatId, UserId, Message, CreationDate, Status
-            )VALUES( ?,?,?, now(), 1 )";
+            ChatId, UserId, Message, CreationDate, Status, Type
+            )VALUES( ?,?,?, now(), 1, ? )";
         $stmt = $mysqli->prepare($sql);
-        $stmt->bind_param("iis", $ChatId, $UserId, $Message);
+        $stmt->bind_param("iisi", $ChatId, $UserId, $Message, $Type);
         $stmt->execute();
         $this->Id = (int) $stmt->insert_id;
     }
@@ -128,16 +141,19 @@ class Message
         $sql = 'CALL sp_gestion_mensajes(?,?,?,?,?,?)';
         $stmt = $mysqli->prepare($sql);
         $stmt->execute([$opcion, 0, $IdMessage, 0, '', '']);*/
-        $sql = "SELECT u.UserName AS 'UserId', 
-        CASE 
-        WHEN c.isDataEncrypted = 1 THEN AES_DECRYPT(m.DataEncrypted, 'AES') 
-        ELSE m.Message 
-        END AS Message, 
-        DATE_FORMAT(m.CreationDate, '%Y-%m-%d %H:%i') AS CreationDate, c.isDataEncrypted AS isDataEncrypted,
-        u.Status AS statusUser
-        FROM Messages m
-        INNER JOIN Chats c ON m.ChatId = c.Id
-        INNER JOIN Users u ON m.UserId = u.Id
+        $sql = "
+        SELECT 
+            u.UserName AS 'UserId', 
+            CASE 
+                WHEN c.isDataEncrypted = 1 THEN AES_DECRYPT(m.DataEncrypted, 'AES') 
+                ELSE m.Message 
+            END AS Message, 
+            DATE_FORMAT(m.CreationDate, '%Y-%m-%d %H:%i') AS CreationDate, c.isDataEncrypted AS isDataEncrypted,
+            u.Status AS statusUser,
+            m.Type AS Type
+            FROM Messages m
+            INNER JOIN Chats c ON m.ChatId = c.Id
+            INNER JOIN Users u ON m.UserId = u.Id
         WHERE c.Id = ?
         ORDER BY m.CreationDate";
         $stmt = $mysqli->prepare($sql);

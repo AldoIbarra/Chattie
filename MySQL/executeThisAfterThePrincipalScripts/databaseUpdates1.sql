@@ -27,3 +27,16 @@ ADD COLUMN Status INT DEFAULT 1 #0 = Desconectado, 1 = En linea, 2 = Ocupado
 -- Con esta columna se sabra si el usuario esta en linea
 ALTER TABLE Users
 ADD COLUMN LastTimeOnline DATETIME DEFAULT CURRENT_TIMESTAMP; 
+
+-- Agregados el 20/05/2024 --
+
+-- Añadir el tipo de mensaje
+-- 1 = texto, 2 = ubicación, 3 = archivo
+ALTER TABLE messages
+ADD Type int;
+
+-- La columna se acaba de crear, si ya tienes datos en tu base de datos y aún no has usado la funcionalidad del mapa
+-- ejecuta esta linea para marcar todos los mensajes como mensajes de texto
+
+UPDATE messages
+SET Type = 1;

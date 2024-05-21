@@ -11,7 +11,6 @@
 
 body {
   color: white;
-  background-color: red;
 }
 body .header-chat-section {
   background-color: #393E46;
@@ -68,7 +67,7 @@ body .header-chat-section .header-chat .chat-info div:nth-child(2) {
   flex-wrap: nowrap;
   align-items: center;
 }
-body .header-chat-section .header-chat .chat-info div:nth-child(2) button:first-child {
+body .header-chat-section .header-chat .chat-info div:nth-child(2) button:nth-child(2) {
   padding-bottom: 8px;
 }
 body .header-chat-section .header-chat .chat-info div:nth-child(2) button img {
@@ -123,8 +122,22 @@ body .container-chats-section .container-chats .messages .footer-container foote
 body .container-chats-section .container-chats .messages .footer-container footer input:focus {
   outline: 0;
 }
+body .container-chats-section .container-chats .messages .footer-container footer input img {
+  width: 35px;
+  height: 35px;
+}
 body .container-chats-section .container-chats .messages .footer-container footer div div div {
   padding: 5px;
+}
+body .container-chats-section .container-chats .messages .footer-container footer button {
+  background-color: transparent;
+  border: none;
+}
+body .container-chats-section .container-chats .messages .footer-container footer button:focus {
+  outline: none;
+}
+body .container-chats-section .container-chats .messages .footer-container footer #location img {
+  max-height: 30px;
 }
 body .container-chats-section .container-chats .messages .chat-messages {
   position: relative;
@@ -195,6 +208,15 @@ body .container-chats-section .container-chats .messages .chat-messages .YourMes
 body .container-chats-section .container-chats .messages .chat-messages .YourMessageGroup div span:nth-child(3) {
   text-align: end;
   font-size: 10px;
+}
+body .container-chats-section .container-chats .messages .chat-messages .initial-Display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+body .container-chats-section .container-chats .messages .chat-messages .initial-Display img {
+  margin-top: 20px;
 }
 body #ContactsModal .Contacts {
   background-color: #393E46;

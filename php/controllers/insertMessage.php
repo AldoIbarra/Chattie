@@ -7,6 +7,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $UserId = $_POST['fromUser'];
     $ChatId = $_POST['fromChat'];
     $Message = $_POST['message'];
+    $Type = $_POST['Type'];
     
 
     //Obtener Json
@@ -15,7 +16,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     header('Content-Type: application/json');
     $mysqli = db::connect();
     $message = Message::parseJson($json);
-    $message->save($mysqli, $ChatId, $UserId , $Message);
+    $message->save($mysqli, $ChatId, $UserId , $Message, $Type);
 
     $json_response = ["success" => true];
         $json_response["msg" ] = "Exito al mandar el mensaje";
