@@ -69,6 +69,10 @@ form input{
     color: white;
 }
 
+form input:focus{
+    outline: none;
+}
+
 .sign-up-form button{
     margin-top: 10px;
     background-color: #222831;

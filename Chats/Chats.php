@@ -160,7 +160,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 							echo '<span style="display: flex; justify-content: center;">No hay nungún contacto disponible</span>';
 						} else {
 							foreach ($contacts as $contact) {
-								echo '<button onClick="testModal('.$idUser.',\''.$contact->getID().'\')" class="Contact inter">'.$contact->getUsername().' </button>';
+								echo '<button onClick="nuevaConversacion('.$idUser.',\''.$contact->getID().'\')" class="Contact inter">'.$contact->getUsername().' </button>';
 							}
 						}
 					?>
@@ -217,10 +217,19 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="email-form">
-					
+					<form method="POST">
+						<label for="email">Correo electronico</label>
+						<input type="email" id="email" name="email" placeholder="Correo electronico" required="">
+						<label for="subject">Asunto</label>
+						<input type="text" id="subject" name="subject" placeholder="Asunto" required="">
+						<label for="message">Mensaje</label>
+						<textarea name="message" id="message" cols="30" rows="10" placeholder="Mensaje" required=""></textarea>
+                        <button type="submit" class="inter white-text" name="send">Enviar correo</button>
+					</form>
 				</div>
 			</div>
 		</div>
+		<?php include 'email.php'; ?>
 	</div>
 
 
@@ -274,7 +283,8 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 		// Mandar mensaje
 		var sendMessage = document.getElementById("sendMessage");
 		sendMessage.addEventListener("click", function(event) {
-			sendMsg();
+			// 1 = Mensaje de tipo texto
+			sendMsg(1, $("#messageText").val());
 			$('#messageText').val('');
 		})
 
@@ -295,11 +305,12 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 			$('#ContactsModal').modal("show");;
 		}
 
-		function testModal(actualUserId, contactId) {
+		function nuevaConversacion(actualUserId, contactId) {
 			checkIfChatExists(actualUserId, contactId);
 		}
 		//ChatId, chatName, status, IsGroup?
 		function setChatReady(chatIndex, chatName, status, indexisGroup) {
+			$(".footer-container").show();
 			chatId = chatIndex;
 			chatIsGroup = indexisGroup;
 			document.getElementById("chat_selected").textContent = chatName;
@@ -371,6 +382,53 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 										$('.chat-messages').scrollTop($('.chat-messages')[0]
 											.scrollHeight);
 									}
+								}else if (row.Type == 2){
+									var messageClass = (row.UserId ===
+									'<?php echo $user->getUserName(); ?>'
+									) ? "MyMessage" : (chatIsGroup === "1" ? "YourMessageGroup" : "YourMessage");
+									messageHTML = '<div class="' + messageClass + '"><div>';
+									if (messageClass === "YourMessageGroup") {
+										messageHTML += '<span>' + row.UserId + '</span>';
+									}
+									else if (messageClass === "YourMessage"){
+										changeStatusUser(row.statusUser);
+									}
+									messageHTML += '<span>' + row.Message + '</span>';
+									messageHTML += '<span>' + row.CreationDate +
+										'</span>';
+									messageHTML += '</div></div>';
+
+									$('#chat-messages').append(messageHTML);
+
+									if (!onInterval) {
+										$('.chat-messages').scrollTop($('.chat-messages')[0]
+											.scrollHeight);
+									}
+									// console.log(row);
+									// var tagId = 'map' + row.Id;
+									// var [longitude, latitude] = row.Message.split(', ');
+									// var messageClass = (row.UserId ===
+									// '<?php echo $user->getUserName(); ?>'
+									// ) ? "MyMessage" : (chatIsGroup === "1" ? "YourMessageGroup" : "YourMessage");
+									// messageHTML = '<div class="' + messageClass + '"><div>';
+									// if (messageClass === "YourMessageGroup") {
+									// 	messageHTML += '<span>' + row.UserId + '</span>';
+									// }
+									// else if (messageClass === "YourMessage"){
+									// 	changeStatusUser(row.statusUser);
+									// }
+									// messageHTML += '<div class="map-message" id="' + tagId + '"></div>';
+									// messageHTML += '<span>' + row.CreationDate +
+									// 	'</span>';
+
+									// $('#chat-messages').append(messageHTML);
+
+									// showMap(Number(longitude), Number(latitude), tagId);
+
+									// if (!onInterval) {
+									// 	$('.chat-messages').scrollTop($('.chat-messages')[0]
+									// 		.scrollHeight);
+									// }
 								}
 								
 							});
@@ -388,10 +446,11 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 			});
 		}
 
-		function sendMsg() {
-			//Esta funcion solo envía mensajes de texto ya que el "tipo" que utiliza es 1
-			event.preventDefault();
-			if ($("#messageText").val() != "") {
+		function sendMsg(type, message) {
+			if(type == 1){
+				event.preventDefault();
+			}
+			if ((type == 1 && $("#messageText").val() != "") || type == 2) {
 
 				$.ajax({
 					url: "../php/controllers/insertMessage.php",
@@ -399,8 +458,8 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 					data: {
 						fromUser: <?php echo $idUser; ?> ,
 						fromChat: chatId,
-						message: $("#messageText").val(),
-						Type: 1
+						message: message,
+						Type: type
 					},
 					dateType: "text",
 					success: function(data) {
@@ -418,9 +477,13 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 
 		function sendLocation() {
 			//Esta funcion solo envía ubicación ya que el "tipo" que utiliza es 2
-			var coords = getCoords();
-			console.log(coords);
-			event.preventDefault();
+
+			
+			getPosition().then(function(value){
+				var coords = value.coords.latitude + ', ' + value.coords.longitude;
+				sendMsg(2, coords);
+				//sendMsg(2, coords);
+			});
 			// if ($("#messageText").val() != "") {
 
 			// 	$.ajax({
@@ -456,9 +519,11 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 				},
 				success: function(data) {
 					try {
+						console.log('intenta crear chat');
 						var chat = data;
 						console.log(chat);
 						if (chat != null) {
+							console.log('ya existe el chat');
 							$('#ContactsModal').modal("hide");
 							setChatReady(chat.Id, chat.Name, 0);
 						} else {
@@ -587,8 +652,10 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 				},
 				dateType: "text",
 				success: function(data) {
+					//ChatId, chatName, status, IsGroup?
 					console.log(data);
 					console.log("Se creó el chat");
+					checkIfChatExists(actualUserId, contactId);
 				}
 			})
 		}
@@ -603,7 +670,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"> </script>
 	<script src="https://mesquite-malachite-pirate.glitch.me/socket.io/socket.io.js"></script>
-	<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMKezTeAW43Iu6jRKx9dG5ooUDi3ZS7uY"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMKezTeAW43Iu6jRKx9dG5ooUDi3ZS7uY"></script>
 	<script src="../js/chats.js"></script>
 	<script src='Videocall.js'></script>
 	<script src="maps.js"></script>

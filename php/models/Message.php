@@ -81,24 +81,24 @@ class Message
         $this->Type = $Type;
     }
 
-    public function getisstatusUser()
+    public function getstatusUser($statusUser)
     {
-        return $this->isstatusUser;
+        return $this->statusUser;
     }
 
-    public function setisstatusUser($isstatusUser)
+    public function setstatusUser($statusUser)
     {
-        $this->isstatusUser = $isstatusUser;
+        $this->statusUser = $statusUser;
     }
 
-    public function __construct($ChatId, $UserId, $Message, $CreationDate, $isDataEncrypted, $isstatusUser, $Type)
+    public function __construct($ChatId, $UserId, $Message, $CreationDate, $isDataEncrypted, $statusUser, $Type)
     {
         $this->ChatId = $ChatId;
         $this->UserId = $UserId;
         $this->Message = $Message;
         $this->CreationDate = $CreationDate;
         $this->isDataEncrypted = $isDataEncrypted;
-        $this->isstatusUser = $isstatusUser;
+        $this->statusUser = $statusUser;
         $this->Type = $Type;
     }
 
@@ -110,7 +110,7 @@ class Message
             isset($json['Message']) ? $json['Message'] : '',
             isset($json['CreationDate']) ? $json['CreationDate'] : '',
             isset($json['isDataEncrypted']) ? $json['isDataEncrypted'] : '',
-            isset($json['isstatusUser']) ? $json['isstatusUser'] : '',
+            isset($json['statusUser']) ? $json['statusUser'] : '',
             isset($json['Type']) ? $json['Type'] : '',
         );
         if (isset($json['Id'])) {
@@ -142,7 +142,8 @@ class Message
         $stmt = $mysqli->prepare($sql);
         $stmt->execute([$opcion, 0, $IdMessage, 0, '', '']);*/
         $sql = "
-        SELECT 
+        SELECT
+            m.Id AS Id,
             u.UserName AS 'UserId', 
             CASE 
                 WHEN c.isDataEncrypted = 1 THEN AES_DECRYPT(m.DataEncrypted, 'AES') 

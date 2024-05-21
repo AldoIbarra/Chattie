@@ -144,7 +144,7 @@ body .container-chats-section .container-chats .messages .chat-messages {
   max-height: 78vh;
   overflow: hidden;
   overflow-y: scroll;
-  scrollbar-color: #fafafa80 #fafafa00;
+  scrollbar-color: rgba(250, 250, 250, 0.5019607843) rgba(250, 250, 250, 0);
   scrollbar-gutter: stable;
 }
 body .container-chats-section .container-chats .messages .chat-messages .YourMessage div {
@@ -173,7 +173,6 @@ body .container-chats-section .container-chats .messages .chat-messages .MyMessa
   display: flex;
   flex-direction: column;
   background-color: #00ADB5;
-  max-width: fit-content;
   margin: 10px;
   padding: 5px;
   border-radius: 5px;
@@ -217,6 +216,10 @@ body .container-chats-section .container-chats .messages .chat-messages .initial
 }
 body .container-chats-section .container-chats .messages .chat-messages .initial-Display img {
   margin-top: 20px;
+}
+body .container-chats-section .container-chats .messages .chat-messages .map-message {
+  min-width: 400px !important;
+  min-height: 400px !important;
 }
 body #ContactsModal .Contacts {
   background-color: #393E46;
@@ -293,6 +296,46 @@ body #videocallModal .modal-body .videocall-options button img {
 body #videocallModal .modal-body .videocall-options button:hover {
   background-color: red;
   transition: 0.5s ease-in-out;
+}
+body #EmailModal .email-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  background-color: #222831 !important;
+  color: white;
+  padding: 5px;
+}
+body #EmailModal .email-header h4 {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+body #EmailModal .email-header button {
+  margin-bottom: 10px;
+}
+body #EmailModal .email-form {
+  background-color: #222831 !important;
+}
+body #EmailModal .email-form form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  padding: 0px 40px;
+  margin: 20px 0px 20px 0px;
+}
+body #EmailModal .email-form form input, body #EmailModal .email-form form textarea {
+  margin-bottom: 10px;
+}
+body #EmailModal .email-form form input:focus, body #EmailModal .email-form form textarea:focus {
+  outline: none;
+}
+body #EmailModal .email-form form label {
+  margin-bottom: 5px;
+}
+body #EmailModal .email-form form textarea {
+  max-height: 300px;
 }
 
 /*# sourceMappingURL=chats.css.map */

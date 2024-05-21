@@ -208,7 +208,6 @@ body{
                             display: flex;
                             flex-direction: column;
                             background-color: #00ADB5;
-                            max-width: fit-content;
                             margin: 10px;
                             padding: 5px;
                             border-radius: 5px;
@@ -259,6 +258,11 @@ body{
                         img{
                             margin-top: 20px;
                         }
+                    }
+
+                    .map-message{
+                        min-width: 400px !important;
+                        min-height: 400px !important;
                     }
                 }
             }
@@ -354,6 +358,51 @@ body{
                         transition: .5s ease-in-out;
                     }
                     
+                }
+            }
+        }
+    }
+
+    #EmailModal{
+        .email-header{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+            background-color: #222831 !important;
+            color: white;
+            padding: 5px;
+            h4{
+                margin-top: 10px;
+                margin-left: 10px;
+            }
+            button{
+                margin-bottom: 10px;
+            }
+        }
+
+        .email-form{
+            background-color: #222831 !important;
+            form{
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                flex-wrap: nowrap;
+                padding: 0px 40px;
+                margin: 20px 0px 20px 0px;
+                input,textarea{
+                    margin-bottom: 10px;
+                    &:focus{
+                        outline: none;
+                    
+                    }
+                }
+                label{
+                    margin-bottom: 5px;
+                }
+                textarea{
+                    max-height: 300px;
                 }
             }
         }

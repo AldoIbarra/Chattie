@@ -9,10 +9,17 @@
 //     return position.coords.latitude + ', ' + position.coords.longitude;
 // }
 
-function showMap(latitud, longitud){
-    var coord = {lat: latitud, lng: longitud};
-    var map = new google.maps.Map
-
+function showMap(latitude, longitude, tagId){
+    var coord = {lat:latitude ,lng: longitude};
+    var map = new google.maps.Map(document.getElementById(tagId),{
+      zoom: 10,
+      center: coord,
+      disableDefaultUI: true
+    });
+    var marker = new google.maps.Marker({
+      position: coord,
+      map: map
+    });
 }
 
 function getPosition() {
@@ -21,9 +28,4 @@ function getPosition() {
     });
 }
 
-function getCoords() {
-    getPosition().then(function(value){
-        var coords = value.coords.latitude + ', ' + value.coords.longitude;
-        return coords;
-    });
-}
+//showMap(25.649225 ,-100.32595, "map22")

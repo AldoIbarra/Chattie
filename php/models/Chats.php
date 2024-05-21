@@ -102,15 +102,15 @@ class Chat
         (SELECT u2.Status                       
              FROM Users u2
              INNER JOIN UserChats uc2 ON u2.Id = uc2.UserId
-             WHERE uc2.ChatId = c.Id AND uc2.UserId != 1)    
+             WHERE uc2.ChatId = c.Id AND uc2.UserId != ?)    
         ELSE NULL                               -- De lo contrario devuelve NULL
-    END AS 'Status'                         
-    FROM Chats c
-    INNER JOIN UserChats uc ON uc.ChatId = c.Id
-    WHERE uc.UserId = ?";
+        END AS 'Status'                         
+        FROM Chats c
+        INNER JOIN UserChats uc ON uc.ChatId = c.Id
+        WHERE uc.UserId = ?";
 
         $stmt = $mysqli->prepare($sql);
-        $stmt->bind_param("ii", $IdUser, $IdUser);
+        $stmt->bind_param("iii", $IdUser, $IdUser, $IdUser);
         $stmt->execute();
         $result = $stmt->get_result();
         $Chats = [];
