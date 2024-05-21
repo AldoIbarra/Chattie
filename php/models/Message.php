@@ -142,21 +142,31 @@ class Message
         $stmt = $mysqli->prepare($sql);
         $stmt->execute([$opcion, 0, $IdMessage, 0, '', '']);*/
         $sql = "
-        SELECT
-            m.Id AS Id,
-            u.UserName AS 'UserId', 
-            CASE 
-                WHEN c.isDataEncrypted = 1 THEN AES_DECRYPT(m.DataEncrypted, 'AES') 
-                ELSE m.Message 
-            END AS Message, 
-            DATE_FORMAT(m.CreationDate, '%Y-%m-%d %H:%i') AS CreationDate, c.isDataEncrypted AS isDataEncrypted,
-            u.Status AS statusUser,
-            m.Type AS Type
-            FROM Messages m
-            INNER JOIN Chats c ON m.ChatId = c.Id
-            INNER JOIN Users u ON m.UserId = u.Id
-        WHERE c.Id = ?
-        ORDER BY m.CreationDate";
+        SELECT 
+        u.UserName AS 'UserId', 
+        CASE 
+            WHEN m.Type = 3 THEN (
+                SELECT f.filePath 
+                FROM Files f 
+                WHERE f.messageId = m.Id
+            )
+            WHEN c.isDataEncrypted = 1 THEN AES_DECRYPT(m.DataEncrypted, 'AES')
+            ELSE m.Message 
+        END AS Message, 
+        DATE_FORMAT(m.CreationDate, '%Y-%m-%d %H:%i') AS CreationDate, 
+        c.isDataEncrypted AS isDataEncrypted,
+        u.Status AS statusUser,
+        m.Type AS Type
+    FROM 
+        Messages m
+    INNER JOIN 
+        Chats c ON m.ChatId = c.Id
+    INNER JOIN 
+        Users u ON m.UserId = u.Id
+    WHERE 
+        c.Id = ?
+    ORDER BY 
+        m.CreationDate";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("i", $IdMessage);
         $stmt->execute();
@@ -165,7 +175,7 @@ class Message
         while ($message = $result->fetch_assoc()) {
             $messages[] = $message;
         }
-
+        $stmt->close();
         return $messages;
     }
 

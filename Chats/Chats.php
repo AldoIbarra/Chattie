@@ -55,11 +55,11 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 						<!-- <span>En línea</span> -->
 						<select class="custom-select" id="statusSelect" onchange="saveStatusUser()">
 							<option value="1" <?php if ($user->getStatus() == 1) {
-								echo "selected";
+							    echo "selected";
 							} ?>
 								>En línea</option>
 							<option value="0" <?php if ($user->getStatus() == "0") {
-								echo "selected";
+							    echo "selected";
 							} ?>>No disponible
 							</option>
 						</select>
@@ -95,15 +95,15 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 			<div class="row container-chats">
 				<div class="col-4 chat-list">
 					<?php // se muestran los chats
-						if(count($chats) < 1) {
-							echo '<span style="display: flex; justify-content: center;">Aún no existen chats</span>';
-						} else {
-							foreach ($chats as $chat) {
-								echo '<div class="chat" id="chat'.$chat->getID().'" data-index="'.$chat->getID().'" data-group="'.$chat->getIsGroup().'" data-status="'.$chat->getStatusUser().'"   >'.$chat->getName().'</div>';
-							}
-						}
+                        if(count($chats) < 1) {
+                            echo '<span style="display: flex; justify-content: center;">Aún no existen chats</span>';
+                        } else {
+                            foreach ($chats as $chat) {
+                                echo '<div class="chat" id="chat'.$chat->getID().'" data-index="'.$chat->getID().'" data-group="'.$chat->getIsGroup().'" data-status="'.$chat->getStatusUser().'"   >'.$chat->getName().'</div>';
+                            }
+                        }
 
-					?>
+?>
 				</div>
 				<div class="col-8 messages">
 					<div class="chat-messages" id="chat-messages">
@@ -118,9 +118,10 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 								<div class="col-12">
 									<div class="row">
 										<div class="col-1">
-											<button>
+											<label for="file-upload" class="custom-file-upload">
 												<img src="Export.svg" alt="">
-											</button>
+											</label>
+											<input id="file-upload" type="file" name="files" />
 										</div>
 										<div class="col-1">
 											<button id="location" onclick="sendLocation();">
@@ -156,14 +157,14 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 				<!-- Modal body -->
 				<div class="Contacts">
 					<?php // se muestran los contactos
-						if(count($contacts) < 1) {
-							echo '<span style="display: flex; justify-content: center;">No hay nungún contacto disponible</span>';
-						} else {
-							foreach ($contacts as $contact) {
-								echo '<button onClick="nuevaConversacion('.$idUser.',\''.$contact->getID().'\')" class="Contact inter">'.$contact->getUsername().' </button>';
-							}
-						}
-					?>
+    if(count($contacts) < 1) {
+        echo '<span style="display: flex; justify-content: center;">No hay nungún contacto disponible</span>';
+    } else {
+        foreach ($contacts as $contact) {
+            echo '<button onClick="nuevaConversacion('.$idUser.',\''.$contact->getID().'\')" class="Contact inter">'.$contact->getUsername().' </button>';
+        }
+    }
+?>
 				</div>
 
 				<!-- Modal footer -->
@@ -174,8 +175,9 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 			</div>
 		</div>
 	</div>
-	
-	<div class="modal" id="encryptionModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel" aria-hidden="true">
+
+	<div class="modal" id="encryptionModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel"
+		aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -188,8 +190,9 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 			</div>
 		</div>
 	</div>
-	
-	<div class="modal" id="videocallModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel" aria-hidden="true">
+
+	<div class="modal" id="videocallModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel"
+		aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -198,7 +201,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 				</div>
 				<div class="modal-body">
 					<video id="localVideo" autoplay muted></video>
-  					<video id="remoteVideo" autoplay></video>
+					<video id="remoteVideo" autoplay></video>
 					<div class="videocall-options">
 						<button onclick="finishVideocall()">
 							<img src="phone.svg" alt="">
@@ -223,8 +226,9 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 						<label for="subject">Asunto</label>
 						<input type="text" id="subject" name="subject" placeholder="Asunto" required="">
 						<label for="message">Mensaje</label>
-						<textarea name="message" id="message" cols="30" rows="10" placeholder="Mensaje" required=""></textarea>
-                        <button type="submit" class="inter white-text" name="send">Enviar correo</button>
+						<textarea name="message" id="message" cols="30" rows="10" placeholder="Mensaje"
+							required=""></textarea>
+						<button type="submit" class="inter white-text" name="send">Enviar correo</button>
 					</form>
 				</div>
 			</div>
@@ -236,10 +240,10 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 	<script>
-		if(document.getElementById('chat_selected').textContent == 'Bienvenido'){
+		if (document.getElementById('chat_selected').textContent == 'Bienvenido') {
 			$(".chat-options").hide();
 			$(".footer-container").hide();
-    	}
+		}
 
 
 		var statusSelect = document.getElementById("statusSelect");
@@ -261,7 +265,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 			});
 		});
 
-		function callOtherUser(){
+		function callOtherUser() {
 			console.log('currentChat');
 			console.log(currentChat);
 
@@ -317,34 +321,60 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 
 			if (status == "0") {
 				document.getElementById("user_status").textContent = "No disponible";
-			} else if (status == 1){
+			} else if (status == 1) {
 				document.getElementById("user_status").textContent = "En línea";
-			}
-			else {
+			} else {
 				document.getElementById("user_status").textContent = "";
 			}
 		}
 
-		
-		function changeIconEncrypt(isDataEncrypted){     // cambia el icono/boton para encriptar los  mensajes
+
+		function changeIconEncrypt(isDataEncrypted) { // cambia el icono/boton para encriptar los  mensajes
 			var img = document.getElementById('isDataEncrypted');
 			if (isDataEncrypted) {
-									img.src = 'Lock_fill.svg'; // esta encriptado
-								} else {
-									img.src = 'Unlock_fill.svg'; // no esta encriptado
-								}
+				img.src = 'Lock_fill.svg'; // esta encriptado
+			} else {
+				img.src = 'Unlock_fill.svg'; // no esta encriptado
+			}
 		}
 
-		function changeStatusUser(status){
+		function changeStatusUser(status) {
 			if (status == 0) {
 				document.getElementById("user_status").textContent = "No disponible";
-			} else if (status == 1){
+			} else if (status == 1) {
 				document.getElementById("user_status").textContent = "En línea";
-			}
-			else {
+			} else {
 				document.getElementById("user_status").textContent = "";
 			}
 		}
+
+		//Esta funcion solo envia archivos ya que el "tipo" que utiliza es 3
+		$('#file-upload').on('change', function() {
+			var fileInput = this;
+			if (fileInput.files.length > 0) {
+				var formData = new FormData();
+				formData.append('file', fileInput.files[0]);
+				formData.append('fromUser', <?php echo $idUser; ?> );
+				formData.append('fromChat', chatId);
+				formData.append('message', '');
+				formData.append('Type', 3);
+
+				$.ajax({
+					url: "../php/controllers/insertMessageFile.php",
+					type: "POST",
+					data: formData,
+					processData: false, // No procesar los datos
+					contentType: false, // No establecer ningún tipo de contenido
+					success: function(data) {
+						console.log('Archivo enviado exitosamente');
+						console.log(data);
+					},
+					error: function(xhr, status, error) {
+						console.error('Error al enviar el archivo: ' + error);
+					}
+				});
+			}
+		});
 
 		function showMessages(onInterval) {
 			$.ajax({
@@ -360,15 +390,15 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 						if (infoChat.messages.length > 0) {
 							changeIconEncrypt(infoChat.messages[0].isDataEncrypted);
 							infoChat.messages.forEach(function(row) {
-								if(row.Type == 1){
+								if (row.Type == 1) {
 									var messageClass = (row.UserId ===
-									'<?php echo $user->getUserName(); ?>'
-									) ? "MyMessage" : (chatIsGroup === "1" ? "YourMessageGroup" : "YourMessage");
+										'<?php echo $user->getUserName(); ?>'
+									) ? "MyMessage" : (chatIsGroup === "1" ? "YourMessageGroup" :
+										"YourMessage");
 									messageHTML = '<div class="' + messageClass + '"><div>';
 									if (messageClass === "YourMessageGroup") {
 										messageHTML += '<span>' + row.UserId + '</span>';
-									}
-									else if (messageClass === "YourMessage"){
+									} else if (messageClass === "YourMessage") {
 										changeStatusUser(row.statusUser);
 									}
 									messageHTML += '<span>' + row.Message + '</span>';
@@ -382,15 +412,15 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 										$('.chat-messages').scrollTop($('.chat-messages')[0]
 											.scrollHeight);
 									}
-								}else if (row.Type == 2){
+								} else if (row.Type == 2) {
 									var messageClass = (row.UserId ===
-									'<?php echo $user->getUserName(); ?>'
-									) ? "MyMessage" : (chatIsGroup === "1" ? "YourMessageGroup" : "YourMessage");
+										'<?php echo $user->getUserName(); ?>'
+									) ? "MyMessage" : (chatIsGroup === "1" ? "YourMessageGroup" :
+										"YourMessage");
 									messageHTML = '<div class="' + messageClass + '"><div>';
 									if (messageClass === "YourMessageGroup") {
 										messageHTML += '<span>' + row.UserId + '</span>';
-									}
-									else if (messageClass === "YourMessage"){
+									} else if (messageClass === "YourMessage") {
 										changeStatusUser(row.statusUser);
 									}
 									messageHTML += '<span>' + row.Message + '</span>';
@@ -429,8 +459,39 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 									// 	$('.chat-messages').scrollTop($('.chat-messages')[0]
 									// 		.scrollHeight);
 									// }
+								} else if (row.Type == 3) {
+									var messageClass = (row.UserId ===
+										'<?php echo $user->getUserName(); ?>'
+									) ? "MyMessage" : (chatIsGroup === "1" ? "YourMessageGroup" :
+										"YourMessage");
+									messageHTML = '<div class="' + messageClass + '"><div>';
+									if (messageClass === "YourMessageGroup") {
+										messageHTML += '<span>' + row.UserId + '</span>';
+									} else if (messageClass === "YourMessage") {
+										changeStatusUser(row.statusUser);
+									}
+
+									messageHTML += '<span>';
+
+									const tempDiv = document.createElement('div');
+									if (row.Type === 3) {
+										displayFile(row.Message, tempDiv);
+									} else {
+										tempDiv.textContent = row.Message;
+									}
+									messageHTML += tempDiv.innerHTML;
+
+									messageHTML += '</span><span>' + row.CreationDate + '</span>';
+									messageHTML += '</div></div>';
+
+									$('#chat-messages').append(messageHTML);
+
+									if (!onInterval) {
+										$('.chat-messages').scrollTop($('.chat-messages')[0]
+											.scrollHeight);
+									}
 								}
-								
+
 							});
 						} else {
 							var noMessages = '<span>No hay mensajes disponibles</span>';
@@ -447,7 +508,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 		}
 
 		function sendMsg(type, message) {
-			if(type == 1){
+			if (type == 1) {
 				event.preventDefault();
 			}
 			if ((type == 1 && $("#messageText").val() != "") || type == 2) {
@@ -478,8 +539,8 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 		function sendLocation() {
 			//Esta funcion solo envía ubicación ya que el "tipo" que utiliza es 2
 
-			
-			getPosition().then(function(value){
+
+			getPosition().then(function(value) {
 				var coords = value.coords.latitude + ', ' + value.coords.longitude;
 				sendMsg(2, coords);
 				//sendMsg(2, coords);
@@ -623,7 +684,7 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 			});
 		}
 
-		function closeSesion(){
+		function closeSesion() {
 			$.ajax({
 				type: "POST",
 				url: "../php/controllers/logout.php",
@@ -660,15 +721,81 @@ $contacts = User::getUserContacts($mysqli, $idUser);
 			})
 		}
 
-		function newEmail(){
+		function newEmail() {
 			console.log('new email');
 			console.log('currentChat');
 			console.log(currentChat);
 			$('#EmailModal').modal("show");;
 		}
+
+		function normalizePath(filePath) {
+			const segments = filePath.split('/');
+			const stack = [];
+
+			for (const segment of segments) {
+				if (segment === '..') {
+					if (stack.length) {
+						stack.pop();
+					}
+				} else if (segment !== '.' && segment !== '') {
+					stack.push(segment);
+				}
+			}
+
+			return stack.join('/');
+		}
+
+
+		function displayFile(filePath, container) {
+			filePath = normalizePath(filePath);
+			const fileExtension = filePath.split('.').pop().toLowerCase();
+
+			switch (fileExtension) {
+				case 'jpg':
+				case 'jpeg':
+				case 'png':
+				case 'gif':
+					displayImage(filePath, container);
+					break;
+				case 'mp4':
+				case 'webm':
+				case 'ogg':
+					displayVideo(filePath, container);
+					break;
+				default:
+					displayFileLink(filePath, container);
+					break;
+			}
+		}
+
+		function displayImage(filePath, container) {
+			const img = document.createElement('img');
+			img.src = "../" + filePath;
+			img.alt = 'Image';
+			img.style.maxWidth = '100%';
+			container.appendChild(img);
+		}
+
+		function displayVideo(filePath, container) {
+			const video = document.createElement('video');
+			video.src = "../" + filePath;
+			video.controls = true;
+			video.style.maxWidth = '100%';
+			container.appendChild(video);
+		}
+
+		function displayFileLink(filePath, container) {
+			const link = document.createElement('a');
+			link.href = "../" + filePath;
+			link.textContent = filePath.split('/').pop();
+			link.download = '';
+			container.appendChild(link);
+		}
 	</script>
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"> </script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+	</script>
 	<script src="https://mesquite-malachite-pirate.glitch.me/socket.io/socket.io.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMKezTeAW43Iu6jRKx9dG5ooUDi3ZS7uY"></script>
 	<script src="../js/chats.js"></script>

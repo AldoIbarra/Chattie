@@ -337,5 +337,14 @@ body #EmailModal .email-form form label {
 body #EmailModal .email-form form textarea {
   max-height: 300px;
 }
+input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+  border: 0px transparent;
+  display: inline-block;
+  cursor: pointer;
+}
 
 /*# sourceMappingURL=chats.css.map */

@@ -40,3 +40,13 @@ ADD Type int;
 
 UPDATE messages
 SET Type = 1;
+
+CREATE TABLE Files (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    messageId INT,
+    fileName VARCHAR(255),
+    filePath VARCHAR(255),
+    fileType VARCHAR(50),
+    fileSize INT,
+    FOREIGN KEY (MessageId) REFERENCES Messages(Id)
+);
